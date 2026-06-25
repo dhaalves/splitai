@@ -5,3 +5,6 @@ dist-ssr
 .DS_Store
 .superpowers/
 *.log
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
