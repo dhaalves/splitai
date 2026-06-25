@@ -1,0 +1,223 @@
+import { useEffect, useState } from 'react';
+import { Modal } from '../../components/Modal';
+import { Button } from '../../components/Button';
+import { Input } from '../../components/Input';
+import { AmountInput } from '../../components/AmountInput';
+import { CategoryPicker } from './CategoryPicker';
+import { SplitEditor } from './SplitEditor';
+import { useProfile } from '../auth/useProfile';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { getDb } from '../../db/db';
+import { createExpense, updateExpense, useExpense, type ExpenseInput } from './useExpenses';
+import type { SplitEntry, SplitMethod } from '../../db/schema';
+import { useToasts } from '../../stores/toasts';
+
+interface ExpenseFormProps {
+  open: boolean;
+  onClose: () => void;
+  onSaved: () => void;
+  initialGroupId: string | null;
+  initialFriendId: string | null;
+  editingId?: string;
+}
+
+function todayMs(): number {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+export function ExpenseForm({
+  open, onClose, onSaved, initialGroupId, initialFriendId, editingId,
+}: ExpenseFormProps) {
+  const profile = useProfile();
+  const existing = useExpense(editingId);
+  const contacts = useLiveQuery(() => getDb().contacts.toArray(), []);
+  const group = useLiveQuery(
+    async () => (initialGroupId ? getDb().groups.get(initialGroupId) : undefined),
+    [initialGroupId]
+  );
+  const push = useToasts((s) => s.push);
+
+  const [amount, setAmount] = useState(0);
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<string | null>(null);
+  const [date, setDate] = useState(todayMs());
+  const [paidBy, setPaidBy] = useState<string>('');
+  const [method, setMethod] = useState<SplitMethod>('equal');
+  const [splits, setSplits] = useState<SplitEntry[]>([]);
+  const [isSettlement, setIsSettlement] = useState(false);
+
+  const participantIds: string[] = group
+    ? group.memberIds
+    : initialFriendId && profile
+    ? [profile.id, initialFriendId]
+    : profile
+    ? [profile.id, ...(contacts ?? []).slice(0, 1).map((c) => c.id)]
+    : [];
+
+  const participants = participantIds.map((id) => {
+    if (profile && id === profile.id) {
+      return { id, name: `${profile.firstName} ${profile.lastName}`, color: profile.avatarColor };
+    }
+    const c = (contacts ?? []).find((x) => x.id === id);
+    return { id, name: c ? `${c.firstName} ${c.lastName}` : 'Unknown', color: c?.avatarColor ?? '#64748b' };
+  });
+
+  useEffect(() => {
+    if (!open || !profile) return;
+    if (existing) {
+      setAmount(existing.amount);
+      setDescription(existing.description);
+      setCategory(existing.category);
+      setDate(existing.date);
+      setPaidBy(existing.paidBy);
+      setMethod(existing.splitMethod);
+      setSplits(existing.splits);
+      setIsSettlement(existing.isSettlement);
+    } else {
+      setAmount(0);
+      setDescription('');
+      setCategory('general');
+      setDate(todayMs());
+      setPaidBy(profile.id);
+      setMethod('equal');
+      setSplits(participantIds.map((id) => ({ userId: id, share: 0 })));
+      setIsSettlement(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, existing, profile?.id]);
+
+  function updateShare(userId: string, share: number) {
+    setSplits((prev) => prev.map((s) => (s.userId === userId ? { ...s, share } : s)));
+  }
+
+  const splitsValid = (() => {
+    if (isSettlement) return amount > 0;
+    if (amount <= 0) return false;
+    if (method === 'percent') return splits.reduce((a, s) => a + s.share, 0) === 100;
+    if (method === 'exact') return splits.reduce((a, s) => a + s.share, 0) === amount;
+    if (method === 'shares') return splits.some((s) => s.share > 0);
+    return true;
+  })();
+  const valid = Boolean(
+    profile &&
+    amount > 0 &&
+    description.trim() &&
+    category &&
+    paidBy &&
+    splits.length > 0 &&
+    splitsValid
+  );
+
+  async function save() {
+    if (!valid || !profile || !category) return;
+    const otherId = participantIds.find((id) => id !== paidBy);
+    const input: ExpenseInput = {
+      amount,
+      currency: profile.defaultCurrency,
+      description: description.trim(),
+      category,
+      date,
+      groupId: initialGroupId,
+      paidBy,
+      splitMethod: method,
+      splits: isSettlement
+        ? [{ userId: paidBy, share: amount }, ...(otherId ? [{ userId: otherId, share: 0 }] : [])]
+        : splits,
+      isSettlement,
+    };
+    if (editingId) {
+      await updateExpense(editingId, input);
+      push('Expense updated', 'success');
+    } else {
+      await createExpense(input);
+      push('Expense added', 'success');
+    }
+    onSaved();
+  }
+
+  if (!profile) return null;
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={editingId ? 'Edit expense' : 'Add expense'}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button onClick={save} disabled={!valid}>Save</Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <label className="block">
+          <span className="text-sm text-slate-300">Amount</span>
+          <AmountInput
+            aria-label="Amount"
+            valueCents={amount}
+            onChange={setAmount}
+            currency={profile.defaultCurrency}
+            className="mt-1"
+          />
+        </label>
+        <label className="block">
+          <span className="text-sm text-slate-300">Description</span>
+          <Input
+            aria-label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="mt-1"
+          />
+        </label>
+        <div>
+          <span className="text-sm text-slate-300">Category</span>
+          <div className="mt-1">
+            <CategoryPicker selectedId={category} onSelect={setCategory} />
+          </div>
+        </div>
+        <label className="block">
+          <span className="text-sm text-slate-300">Date</span>
+          <Input
+            type="date"
+            aria-label="Date"
+            value={new Date(date).toISOString().slice(0, 10)}
+            onChange={(e) => setDate(new Date(e.target.value).getTime())}
+            className="mt-1"
+          />
+        </label>
+        <label className="block">
+          <span className="text-sm text-slate-300">Paid by</span>
+          <select
+            aria-label="Paid by"
+            value={paidBy}
+            onChange={(e) => setPaidBy(e.target.value)}
+            className="mt-1 w-full rounded-xl bg-slate-800 border border-slate-700 px-3 py-2 text-slate-100"
+          >
+            {participants.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-sm text-slate-300">
+          <input
+            type="checkbox"
+            checked={isSettlement}
+            onChange={(e) => setIsSettlement(e.target.checked)}
+          />
+          This is a settlement payment
+        </label>
+        {!isSettlement && (
+          <SplitEditor
+            amount={amount}
+            currency={profile.defaultCurrency}
+            method={method}
+            splits={splits}
+            participants={participants}
+            onMethodChange={setMethod}
+            onShareChange={updateShare}
+          />
+        )}
+      </div>
+    </Modal>
+  );
+}
