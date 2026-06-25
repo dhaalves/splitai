@@ -37,11 +37,15 @@ export async function createFriend(input: {
 
 export async function deleteFriend(id: string): Promise<void> {
   const db = getDb();
-  const paidByExpenses = await db.expenses.where('paidBy').equals(id).count();
+  const allExpenses = await db.expenses.toArray();
+  const liveExpenses = allExpenses.filter((e) => e.deletedAt === null);
+  const inExpenses = liveExpenses.some(
+    (e) => e.paidBy === id || e.splits.some((s) => s.userId === id)
+  );
   const inGroups = (await db.groups.toArray()).filter(
     (g) => g.deletedAt === null && g.memberIds.includes(id)
   );
-  if (paidByExpenses > 0 || inGroups.length > 0) {
+  if (inExpenses || inGroups.length > 0) {
     throw new Error('Cannot delete a friend who is part of expenses or groups. Remove them first.');
   }
   await db.contacts.delete(id);
