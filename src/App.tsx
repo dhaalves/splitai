@@ -13,6 +13,8 @@ import { GroupsPage } from './pages/GroupsPage';
 import { GroupDetailPage } from './pages/GroupDetailPage';
 import { SettlePage } from './pages/SettlePage';
 import { SearchPage } from './pages/SearchPage';
+import { RecurringPage } from './pages/RecurringPage';
+import { RecurringDetailPage } from './pages/RecurringDetailPage';
 
 function ProfileGate() {
   const hasProfile = useLiveQuery(async () => {
@@ -42,7 +44,8 @@ export default function App() {
             <Route path="/settle" element={<SettlePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/search" element={<SearchPage />} />
-            <Route path="/recurring" element={<div className="p-4">Recurring placeholder (Task 27)</div>} />
+            <Route path="/recurring" element={<RecurringPage />} />
+            <Route path="/recurring/:id" element={<RecurringDetailPage />} />
             <Route path="/more" element={<div className="p-4">More placeholder (Task 28)</div>} />
           </Route>
         </Route>
