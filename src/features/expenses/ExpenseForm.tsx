@@ -121,9 +121,9 @@ export function ExpenseForm({
       date,
       groupId: initialGroupId,
       paidBy,
-      splitMethod: method,
+      splitMethod: isSettlement ? 'exact' : method,
       splits: isSettlement
-        ? [{ userId: paidBy, share: amount }, ...(otherId ? [{ userId: otherId, share: 0 }] : [])]
+        ? [{ userId: paidBy, share: 0 }, ...(otherId ? [{ userId: otherId, share: amount }] : [])]
         : splits,
       isSettlement,
     };

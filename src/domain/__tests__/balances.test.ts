@@ -108,6 +108,25 @@ describe('pairBalance', () => {
     const bal = pairBalance([inGroup, outGroup], U.you, U.ada, 'g1');
     expect(bal.amount).toBe(500);
   });
+
+  it('scopes to only expenses between the two users (not other friends)', () => {
+    const e1 = expense({
+      amount: 1200,
+      paidBy: U.ada,
+      splits: [{ userId: U.you, share: 0 }, { userId: U.ada, share: 0 }],
+    });
+    const e2 = expense({
+      amount: 1200,
+      paidBy: U.you,
+      splits: [{ userId: U.you, share: 0 }, { userId: U.bob, share: 0 }],
+    });
+    // you owe ada 600 (from e1); bob owes you 600 (from e2)
+    // pairBalance(you, ada) should be 600, NOT 0 (e2 shouldn't cancel it out)
+    const balAda = pairBalance([e1, e2], U.you, U.ada);
+    expect(balAda).toEqual({ from: U.you, to: U.ada, amount: 600 });
+    const balBob = pairBalance([e1, e2], U.you, U.bob);
+    expect(balBob).toEqual({ from: U.bob, to: U.you, amount: 600 });
+  });
 });
 
 describe('groupBalances', () => {

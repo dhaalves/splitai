@@ -28,6 +28,8 @@ export interface DirectedDebt {
 
 /**
  * Compute the directed balance between two users, optionally scoped to a group.
+ * Only expenses where both users are the sole participants are considered
+ * (paidBy ∈ {a,b} and all splits[].userId ∈ {a,b}).
  * Returns { from, to, amount } where amount is 0 if settled.
  */
 export function pairBalance(
@@ -36,9 +38,16 @@ export function pairBalance(
   b: string,
   groupId: string | null = null
 ): DirectedDebt {
-  const scoped = expenses.filter(
-    (e) => e.deletedAt === null && (groupId === null || e.groupId === groupId)
-  );
+  const scoped = expenses.filter((e) => {
+    if (e.deletedAt !== null) return false;
+    if (groupId !== null && e.groupId !== groupId) return false;
+    if (e.groupId !== null && groupId === null) return false; // non-group only when groupId is null
+    if (e.paidBy !== a && e.paidBy !== b) return false;
+    const participantIds = e.splits.map((s) => s.userId);
+    if (!participantIds.includes(a) || !participantIds.includes(b)) return false;
+    // every participant must be a or b (no third parties)
+    return participantIds.every((id) => id === a || id === b);
+  });
   const net = computeNetBalances(scoped);
   const na = net[a] ?? 0;
   const nb = net[b] ?? 0;
