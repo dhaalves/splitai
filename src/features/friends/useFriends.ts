@@ -6,8 +6,9 @@ import { randomAvatarColor } from '../../db/seed';
 
 export function useFriends() {
   return useLiveQuery(async () => {
-    const all = await getDb().contacts.orderBy('createdAt').toArray();
-    return all as Contact[];
+    // `contacts` store does not index createdAt; sort in JS (small per-user list).
+    const all = await getDb().contacts.toArray();
+    return all.sort((a, b) => a.createdAt - b.createdAt) as Contact[];
   }, []);
 }
 

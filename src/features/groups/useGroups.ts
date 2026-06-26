@@ -5,8 +5,11 @@ import { uid } from '../../lib/id';
 
 export function useGroups() {
   return useLiveQuery(async () => {
-    const all = await getDb().groups.orderBy('createdAt').toArray();
-    return all.filter((g) => g.deletedAt === null) as Group[];
+    // `groups` store does not index createdAt; sort in JS (small per-user list).
+    const all = await getDb().groups.toArray();
+    return all
+      .filter((g) => g.deletedAt === null)
+      .sort((a, b) => a.createdAt - b.createdAt) as Group[];
   }, []);
 }
 
