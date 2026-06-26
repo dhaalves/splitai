@@ -11,6 +11,7 @@ import { ExpenseDetailPage } from './pages/ExpenseDetailPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { GroupsPage } from './pages/GroupsPage';
 import { GroupDetailPage } from './pages/GroupDetailPage';
+import { SettlePage } from './pages/SettlePage';
 
 function ProfileGate() {
   const hasProfile = useLiveQuery(async () => {
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/expenses/new" element={<ExpenseFormPage />} />
             <Route path="/expenses/:id" element={<ExpenseDetailPage />} />
             <Route path="/expenses/:id/edit" element={<ExpenseFormPage />} />
+            <Route path="/settle" element={<SettlePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/search" element={<div className="p-4">Search placeholder (Task 26)</div>} />
             <Route path="/recurring" element={<div className="p-4">Recurring placeholder (Task 27)</div>} />
