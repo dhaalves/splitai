@@ -28,13 +28,13 @@ export function ProfileEdit() {
     <div>
       <Header title="Profile" />
       <div className="p-4 space-y-3 max-w-md">
-        <label className="block"><span className="text-sm text-slate-300">First name</span>
+        <label className="block"><span className="text-sm text-text-secondary">First name</span>
           <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="mt-1" /></label>
-        <label className="block"><span className="text-sm text-slate-300">Last name</span>
+        <label className="block"><span className="text-sm text-text-secondary">Last name</span>
           <Input value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-1" /></label>
-        <label className="block"><span className="text-sm text-slate-300">Email</span>
+        <label className="block"><span className="text-sm text-text-secondary">Email</span>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" /></label>
-        <label className="block"><span className="text-sm text-slate-300">Currency</span>
+        <label className="block"><span className="text-sm text-text-secondary">Currency</span>
           <Select value={currency} onChange={(e) => setCurrency(e.target.value)} className="mt-1">
             {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </Select></label>

@@ -12,7 +12,7 @@ interface AmountInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, '
 export function AmountInput({ valueCents, onChange, currency, placeholder, className = '', ...rest }: AmountInputProps) {
   return (
     <div className={`relative ${className}`}>
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">{currency}</span>
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary text-sm">{currency}</span>
       <Input
         type="text"
         inputMode="decimal"

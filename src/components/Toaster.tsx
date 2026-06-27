@@ -3,7 +3,7 @@ import { useToasts } from '../stores/toasts';
 const variantStyles = {
   success: 'bg-emerald-600',
   error: 'bg-rose-600',
-  info: 'bg-slate-700',
+  info: 'bg-text-secondary/20',
 };
 
 export function Toaster() {

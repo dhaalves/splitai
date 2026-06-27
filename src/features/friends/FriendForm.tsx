@@ -40,15 +40,15 @@ export function FriendForm({ open, onClose, onSaved }: FriendFormProps) {
     >
       <div className="space-y-3">
         <label className="block">
-          <span className="text-sm text-slate-300">First name</span>
+          <span className="text-sm text-text-secondary">First name</span>
           <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="mt-1" />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Last name</span>
+          <span className="text-sm text-text-secondary">Last name</span>
           <Input value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-1" />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Email (optional)</span>
+          <span className="text-sm text-text-secondary">Email (optional)</span>
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
         </label>
       </div>

@@ -34,7 +34,7 @@ export function Search() {
           onChange={(e) => setText(e.target.value)}
         />
         <div>
-          <div className="text-xs uppercase text-slate-500 mb-1">Category</div>
+          <div className="text-xs uppercase text-text-muted mb-1">Category</div>
           <div className="flex gap-2 flex-wrap">
             {(categories ?? []).map((c) => (
               <Chip key={c.id} selected={selectedCats.includes(c.id)} onClick={() => toggleCat(c.id)}>
@@ -44,7 +44,7 @@ export function Search() {
           </div>
         </div>
         <div>
-          <div className="text-xs uppercase text-slate-500 mb-1">Group</div>
+          <div className="text-xs uppercase text-text-muted mb-1">Group</div>
           <div className="flex gap-2 flex-wrap">
             <Chip selected={groupId === null} onClick={() => setGroupId(null)}>All</Chip>
             {(groups ?? []).filter((g) => g.deletedAt === null).map((g) => (
@@ -56,12 +56,12 @@ export function Search() {
         </div>
         <div className="pt-2">
           {results && results.length === 0 ? (
-            <p className="text-slate-400 text-sm">No matches.</p>
+            <p className="text-text-secondary text-sm">No matches.</p>
           ) : (
             <ul className="space-y-2">
               {results?.map((e) => (
                 <li key={e.id} className="list-none">
-                  <Link to={`/expenses/${e.id}`} className="block p-3 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700/60">
+                  <Link to={`/expenses/${e.id}`} className="block p-3 rounded-xl bg-bg-card border border-border-color hover:bg-text-secondary/10">
                     {e.description} · {new Date(e.date).toLocaleDateString()}
                   </Link>
                 </li>

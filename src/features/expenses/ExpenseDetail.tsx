@@ -48,27 +48,27 @@ export function ExpenseDetail() {
         action={<Link to="/"><Button size="sm" variant="ghost">Back</Button></Link>}
       />
       <div className="p-4 space-y-4">
-        <div className="rounded-xl bg-slate-800 border border-slate-700 p-4">
+        <div className="rounded-xl bg-bg-card border border-border-color p-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl font-bold">
                 <Money cents={expense.amount} currency={expense.currency} />
               </div>
-              <div className="text-slate-400">{expense.description || '(no description)'}</div>
+              <div className="text-text-secondary">{expense.description || '(no description)'}</div>
             </div>
             <span className="text-3xl" aria-hidden>{category?.icon ?? '📦'}</span>
           </div>
           <dl className="mt-4 text-sm space-y-1">
-            <div className="flex justify-between"><dt className="text-slate-400">Date</dt><dd>{formatDate(expense.date)}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-400">Category</dt><dd>{category?.name ?? '—'}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-400">Paid by</dt><dd>{nameOf(expense.paidBy)}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-400">Method</dt><dd className="capitalize">{expense.splitMethod}</dd></div>
-            {expense.isSettlement && <div className="flex justify-between"><dt className="text-slate-400">Type</dt><dd>Settlement</dd></div>}
+            <div className="flex justify-between"><dt className="text-text-secondary">Date</dt><dd>{formatDate(expense.date)}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Category</dt><dd>{category?.name ?? '—'}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Paid by</dt><dd>{nameOf(expense.paidBy)}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Method</dt><dd className="capitalize">{expense.splitMethod}</dd></div>
+            {expense.isSettlement && <div className="flex justify-between"><dt className="text-text-secondary">Type</dt><dd>Settlement</dd></div>}
           </dl>
         </div>
         {!expense.isSettlement && (
-          <div className="rounded-xl bg-slate-800 border border-slate-700 p-4">
-            <h3 className="text-sm uppercase text-slate-500 mb-2">Splits</h3>
+          <div className="rounded-xl bg-bg-card border border-border-color p-4">
+            <h3 className="text-sm uppercase text-text-muted mb-2">Splits</h3>
             <ul className="space-y-1 text-sm">
               {expense.splits.map((s) => (
                 <li key={s.userId} className="flex justify-between">

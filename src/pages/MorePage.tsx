@@ -15,7 +15,7 @@ export function MorePage() {
         <ul className="space-y-2">
           {items.map((it) => (
             <li key={it.to}>
-              <Link to={it.to} className="flex items-center gap-3 p-3 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700/60">
+              <Link to={it.to} className="flex items-center gap-3 p-3 rounded-xl bg-bg-card border border-border-color hover:bg-text-secondary/10">
                 <span className="text-xl">{it.icon}</span>
                 <span>{it.label}</span>
               </Link>

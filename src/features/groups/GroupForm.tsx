@@ -54,17 +54,17 @@ export function GroupForm({ open, onClose, onSaved }: GroupFormProps) {
     >
       <div className="space-y-3">
         <label className="block">
-          <span className="text-sm text-slate-300">Name</span>
+          <span className="text-sm text-text-secondary">Name</span>
           <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Type</span>
+          <span className="text-sm text-text-secondary">Type</span>
           <Select value={type} onChange={(e) => setType(e.target.value as GroupType)} className="mt-1">
             {TYPES.map((t) => <option key={t} value={t} className="capitalize">{t}</option>)}
           </Select>
         </label>
         <div>
-          <span className="text-sm text-slate-300">Members</span>
+          <span className="text-sm text-text-secondary">Members</span>
           <ul className="mt-1 space-y-1">
             {(contacts ?? []).map((c) => (
               <li key={c.id}>

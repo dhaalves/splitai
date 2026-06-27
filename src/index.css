@@ -7,5 +7,40 @@
 }
 
 body {
-  @apply bg-slate-900 text-slate-100 antialiased;
+  @apply bg-bg-darker text-text-primary antialiased;
+}
+
+/* Custom Card styling like the reference */
+.card {
+  @apply bg-bg-card border border-border-color rounded-lg p-5 shadow-md backdrop-blur-md transition-transform duration-300;
+}
+
+.card h2 {
+  @apply font-display text-lg font-semibold text-text-primary mb-3;
+}
+
+.section-desc {
+  @apply text-sm text-text-secondary mb-4;
+}
+
+/* Modal styles */
+.modal-backdrop {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4;
+}
+
+.modal-card {
+  @apply bg-bg-dark border border-border-color rounded-lg p-6 w-full max-w-md shadow-lg flex flex-col gap-3.5;
+}
+
+.modal-card h3 {
+  @apply font-display text-lg font-bold;
+}
+
+.modal-card p {
+  @apply text-sm text-text-secondary;
+}
+
+/* Stat Box Detailed from reference */
+.stat-box-detailed {
+  @apply bg-bg-card border border-border-color rounded-md p-4 flex items-center gap-4 relative overflow-hidden;
 }
