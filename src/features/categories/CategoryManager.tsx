@@ -42,7 +42,7 @@ export function CategoryManager() {
         <Button size="sm" onClick={() => setShowForm(true)}>+ Add category</Button>
         <ul className="space-y-2">
           {(categories ?? []).map((c) => (
-            <li key={c.id} className="flex items-center gap-3 p-3 rounded-xl bg-slate-800 border border-slate-700">
+            <li key={c.id} className="flex items-center gap-3 p-3 rounded-xl bg-bg-card border border-border-color">
               <span className="text-xl">{c.icon}</span>
               <span className="flex-1">{c.name}</span>
               <span className="w-4 h-4 rounded-full" style={{ backgroundColor: c.color }} />
@@ -60,11 +60,11 @@ export function CategoryManager() {
         footer={<><Button variant="ghost" onClick={() => setShowForm(false)}>Cancel</Button><Button onClick={submit} disabled={!name.trim()}>Add</Button></>}
       >
         <div className="space-y-3">
-          <label className="block"><span className="text-sm text-slate-300">Name</span>
+          <label className="block"><span className="text-sm text-text-secondary">Name</span>
             <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1" /></label>
-          <label className="block"><span className="text-sm text-slate-300">Icon (emoji)</span>
+          <label className="block"><span className="text-sm text-text-secondary">Icon (emoji)</span>
             <Input value={icon} onChange={(e) => setIcon(e.target.value)} className="mt-1" /></label>
-          <label className="block"><span className="text-sm text-slate-300">Color (hex)</span>
+          <label className="block"><span className="text-sm text-text-secondary">Color (hex)</span>
             <Input value={color} onChange={(e) => setColor(e.target.value)} className="mt-1" /></label>
         </div>
       </Modal>

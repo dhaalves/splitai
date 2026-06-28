@@ -30,13 +30,13 @@ export function ExpenseRow({ expense }: ExpenseRowProps) {
     <li>
       <Link
         to={`/expenses/${expense.id}`}
-        className="flex items-center justify-between p-3 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700/60"
+        className="flex items-center justify-between p-3 rounded-xl bg-bg-card border border-border-color hover:bg-text-secondary/10"
       >
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-xl" aria-hidden>{category?.icon ?? '📦'}</span>
           <div className="min-w-0">
             <div className="font-medium truncate">{expense.description || '(no description)'}</div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs text-text-secondary">
               {new Date(expense.date).toLocaleDateString()} · {youPaid ? 'you paid' : 'they paid'}
             </div>
           </div>
@@ -44,9 +44,9 @@ export function ExpenseRow({ expense }: ExpenseRowProps) {
         <div className="text-right shrink-0">
           <Money cents={expense.amount} currency={expense.currency} className="font-semibold" />
           {expense.isSettlement ? (
-            <div className="text-xs text-slate-500">settlement</div>
+            <div className="text-xs text-text-muted">settlement</div>
           ) : (
-            <div className={`text-xs ${net > 0 ? 'text-owed' : net < 0 ? 'text-owe' : 'text-slate-500'}`}>
+            <div className={`text-xs ${net > 0 ? 'text-owed' : net < 0 ? 'text-owe' : 'text-text-muted'}`}>
               {net > 0 ? `you lent ${net / 100}` : net < 0 ? `you owe ${-net / 100}` : 'even'}
             </div>
           )}

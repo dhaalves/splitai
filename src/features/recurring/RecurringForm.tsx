@@ -74,30 +74,30 @@ export function RecurringForm({ open, onClose, onSaved }: RecurringFormProps) {
     >
       <div className="space-y-4">
         <label className="block">
-          <span className="text-sm text-slate-300">Description</span>
+          <span className="text-sm text-text-secondary">Description</span>
           <Input value={description} onChange={(e) => setDescription(e.target.value)} className="mt-1" />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Amount</span>
+          <span className="text-sm text-text-secondary">Amount</span>
           <AmountInput valueCents={amount} onChange={setAmount} currency={profile.defaultCurrency} className="mt-1" />
         </label>
         <div>
-          <span className="text-sm text-slate-300">Category</span>
+          <span className="text-sm text-text-secondary">Category</span>
           <div className="mt-1"><CategoryPicker selectedId={category} onSelect={setCategory} /></div>
         </div>
         <label className="block">
-          <span className="text-sm text-slate-300">Frequency</span>
+          <span className="text-sm text-text-secondary">Frequency</span>
           <Select value={frequency} onChange={(e) => setFrequency(e.target.value as Frequency)} className="mt-1">
             {FREQUENCIES.map((f) => <option key={f} value={f} className="capitalize">{f}</option>)}
           </Select>
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Start date</span>
+          <span className="text-sm text-text-secondary">Start date</span>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="mt-1" />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Paid by</span>
-          <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)} className="mt-1 w-full rounded-xl bg-slate-800 border border-slate-700 px-3 py-2 text-slate-100">
+          <span className="text-sm text-text-secondary">Paid by</span>
+          <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)} className="mt-1 w-full rounded-xl bg-bg-card border border-border-color px-3 py-2 text-text-primary">
             {participants.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </label>

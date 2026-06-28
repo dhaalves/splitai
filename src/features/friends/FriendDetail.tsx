@@ -62,9 +62,9 @@ export function FriendDetail() {
           <Link to={`/settle?friend=${friend.id}`}><Button size="sm" variant="secondary">Settle up</Button></Link>
           <Button size="sm" variant="danger" onClick={() => setConfirmOpen(true)}>Remove</Button>
         </div>
-        <h3 className="text-sm uppercase text-slate-500 mb-2">Shared expenses</h3>
+        <h3 className="text-sm uppercase text-text-muted mb-2">Shared expenses</h3>
         {shared.length === 0 ? (
-          <p className="text-slate-400">No expenses yet.</p>
+          <p className="text-text-secondary">No expenses yet.</p>
         ) : (
           <ul className="space-y-2">
             {shared.sort((a, b) => b.date - a.date).map((e) => (

@@ -7,7 +7,7 @@ interface BalanceBadgeProps {
 
 export function BalanceBadge({ cents, currency }: BalanceBadgeProps) {
   if (cents === 0) {
-    return <span className="text-slate-500 text-sm">settled up</span>;
+    return <span className="text-text-muted text-sm">settled up</span>;
   }
   const positive = cents > 0;
   return (

@@ -42,7 +42,7 @@ export function FriendsList() {
                 <li key={f.id}>
                   <Link
                     to={`/friends/${f.id}`}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-800 hover:bg-slate-700/60 border border-slate-700"
+                    className="flex items-center gap-3 p-3 rounded-xl bg-bg-card hover:bg-text-secondary/10 border border-border-color"
                   >
                     <Avatar name={`${f.firstName} ${f.lastName}`} color={f.avatarColor} />
                     <div className="flex-1">

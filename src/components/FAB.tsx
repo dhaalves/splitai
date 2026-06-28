@@ -11,7 +11,7 @@ export function FAB({ to, onClick, label = '+' }: FABProps) {
   return (
     <button
       onClick={() => (to ? navigate(to) : onClick?.())}
-      className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 w-14 h-14 rounded-full bg-accent hover:bg-accent-600 text-white text-2xl shadow-lg flex items-center justify-center"
+      className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 w-14 h-14 rounded-full bg-button-gradient hover:brightness-110 border-none text-white text-2xl shadow-lg flex items-center justify-center"
       aria-label="Add expense"
     >
       {label}

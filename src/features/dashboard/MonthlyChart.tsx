@@ -18,9 +18,9 @@ export function MonthlyChart() {
     .sort((a, b) => a[0].localeCompare(b[0]))
     .slice(-6)
     .map(([k, v]) => ({ month: k.slice(5), total: v / 100 }));
-  if (data.length === 0) return <p className="text-slate-400 text-sm">No spending data yet.</p>;
+  if (data.length === 0) return <p className="text-text-secondary text-sm">No spending data yet.</p>;
   return (
-    <div className="rounded-xl bg-slate-800 border border-slate-700 p-4 h-64">
+    <div className="rounded-xl bg-bg-card border border-border-color p-4 h-64">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />

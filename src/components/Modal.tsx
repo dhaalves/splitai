@@ -53,18 +53,18 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="w-full sm:max-w-lg bg-slate-800 border border-slate-700 rounded-t-2xl sm:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto"
+        className="w-full sm:max-w-lg bg-bg-card border border-border-color rounded-t-2xl sm:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto"
       >
         {title && (
-          <div className="px-5 py-4 border-b border-slate-700 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
-            <button onClick={onClose} aria-label="Close" className="text-slate-400 hover:text-slate-100">
+          <div className="px-5 py-4 border-b border-border-color flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
+            <button onClick={onClose} aria-label="Close" className="text-text-secondary hover:text-text-primary">
               ✕
             </button>
           </div>
         )}
         <div className="px-5 py-4">{children}</div>
-        {footer && <div className="px-5 py-3 border-t border-slate-700 flex justify-end gap-2">{footer}</div>}
+        {footer && <div className="px-5 py-3 border-t border-border-color flex justify-end gap-2">{footer}</div>}
       </div>
     </div>
   );

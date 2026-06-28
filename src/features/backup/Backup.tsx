@@ -93,7 +93,7 @@ export function Backup() {
             }}
           />
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-text-muted">
           Importing adds data alongside existing records (ids are remapped to avoid collisions).
           To fully replace, clear data from your browser first.
         </p>

@@ -40,13 +40,13 @@ export function GroupsList() {
                 <li key={g.id}>
                   <Link
                     to={`/groups/${g.id}`}
-                    className="flex items-center justify-between p-3 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700/60"
+                    className="flex items-center justify-between p-3 rounded-xl bg-bg-card border border-border-color hover:bg-text-secondary/10"
                   >
                     <div>
                       <div className="font-medium">{g.name}</div>
-                      <div className="text-xs text-slate-400 capitalize">{g.type} · {g.memberIds.length} members</div>
+                      <div className="text-xs text-text-secondary capitalize">{g.type} · {g.memberIds.length} members</div>
                     </div>
-                    <div className={`text-sm ${net > 0 ? 'text-owed' : net < 0 ? 'text-owe' : 'text-slate-500'}`}>
+                    <div className={`text-sm ${net > 0 ? 'text-owed' : net < 0 ? 'text-owe' : 'text-text-muted'}`}>
                       {net === 0 ? 'settled' : formatMoney(net, profile.defaultCurrency)}
                     </div>
                   </Link>

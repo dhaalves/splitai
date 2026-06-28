@@ -30,22 +30,22 @@ export function Setup() {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <h1 className="text-2xl font-bold mb-1">Welcome to SplitAI</h1>
-        <p className="text-slate-400 mb-6">Let's set up your profile.</p>
+        <p className="text-text-secondary mb-6">Let's set up your profile.</p>
         <div className="space-y-4">
           <label className="block">
-            <span className="text-sm text-slate-300">First name</span>
+            <span className="text-sm text-text-secondary">First name</span>
             <Input aria-label="First name" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="mt-1" />
           </label>
           <label className="block">
-            <span className="text-sm text-slate-300">Last name</span>
+            <span className="text-sm text-text-secondary">Last name</span>
             <Input aria-label="Last name" value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-1" />
           </label>
           <label className="block">
-            <span className="text-sm text-slate-300">Email</span>
+            <span className="text-sm text-text-secondary">Email</span>
             <Input aria-label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
           </label>
           <label className="block">
-            <span className="text-sm text-slate-300">Currency</span>
+            <span className="text-sm text-text-secondary">Currency</span>
             <Select aria-label="Currency" value={currency} onChange={(e) => setCurrency(e.target.value)} className="mt-1">
               {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </Select>

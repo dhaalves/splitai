@@ -39,10 +39,10 @@ export function SettleUp() {
         ) : (
           <ul className="space-y-2">
             {suggestions.map((s, i) => (
-              <li key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-800 border border-slate-700">
+              <li key={i} className="flex items-center justify-between p-3 rounded-xl bg-bg-card border border-border-color">
                 <div>
                   <div className="font-medium">{s.label}</div>
-                  <Money cents={s.amount} currency={profile.defaultCurrency} className="text-slate-400 text-sm" />
+                  <Money cents={s.amount} currency={profile.defaultCurrency} className="text-text-secondary text-sm" />
                 </div>
                 <Button size="sm" onClick={() => settle(s)}>Settle</Button>
               </li>

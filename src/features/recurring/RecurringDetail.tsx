@@ -23,12 +23,12 @@ export function RecurringDetail() {
     <div>
       <Header title={r.description} action={<Link to="/recurring"><Button size="sm" variant="ghost">Back</Button></Link>} />
       <div className="p-4 space-y-4">
-        <div className="rounded-xl bg-slate-800 border border-slate-700 p-4">
+        <div className="rounded-xl bg-bg-card border border-border-color p-4">
           <div className="text-2xl font-bold"><Money cents={r.amount} currency={profile.defaultCurrency} /></div>
           <dl className="mt-3 text-sm space-y-1">
-            <div className="flex justify-between"><dt className="text-slate-400">Frequency</dt><dd className="capitalize">{r.frequency}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-400">Next due</dt><dd>{formatDate(r.nextDate)}</dd></div>
-            <div className="flex justify-between"><dt className="text-slate-400">Status</dt><dd>{r.active ? 'Active' : 'Paused'}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Frequency</dt><dd className="capitalize">{r.frequency}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Next due</dt><dd>{formatDate(r.nextDate)}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Status</dt><dd>{r.active ? 'Active' : 'Paused'}</dd></div>
           </dl>
         </div>
         <div className="flex gap-2 flex-wrap">

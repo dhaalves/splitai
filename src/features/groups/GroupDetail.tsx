@@ -62,9 +62,9 @@ export function GroupDetail() {
         action={<Link to="/groups"><Button size="sm" variant="ghost">Back</Button></Link>}
       />
       <div className="p-4 space-y-4">
-        <div className="rounded-xl bg-slate-800 border border-slate-700 p-4">
-          <div className="text-xs uppercase text-slate-500 capitalize">{group.type}</div>
-          <div className={`text-xl font-bold ${yourNet > 0 ? 'text-owed' : yourNet < 0 ? 'text-owe' : 'text-slate-300'}`}>
+        <div className="rounded-xl bg-bg-card border border-border-color p-4">
+          <div className="text-xs uppercase text-text-muted capitalize">{group.type}</div>
+          <div className={`text-xl font-bold ${yourNet > 0 ? 'text-owed' : yourNet < 0 ? 'text-owe' : 'text-text-secondary'}`}>
             {yourNet === 0 ? 'settled up' : yourNet > 0
               ? `you are owed ${formatMoney(yourNet, profile.defaultCurrency)}`
               : `you owe ${formatMoney(-yourNet, profile.defaultCurrency)}`}
@@ -75,7 +75,7 @@ export function GroupDetail() {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-3 py-1 rounded-lg text-sm capitalize ${tab === t ? 'bg-accent text-white' : 'bg-slate-800 text-slate-300'}`}
+              className={`px-3 py-1 rounded-lg text-sm capitalize ${tab === t ? 'bg-accent-500 text-white' : 'bg-bg-card text-text-secondary'}`}
             >
               {t}
             </button>
@@ -85,10 +85,10 @@ export function GroupDetail() {
         {tab === 'balances' && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm uppercase text-slate-500">Balances</h3>
+              <h3 className="text-sm uppercase text-text-muted">Balances</h3>
               <button
                 onClick={() => setSimplified((s) => !s)}
-                className="text-xs px-2 py-1 rounded-lg bg-slate-800 text-slate-300"
+                className="text-xs px-2 py-1 rounded-lg bg-bg-card text-text-secondary"
               >
                 {simplified ? 'Show raw' : 'Simplify'}
               </button>
@@ -100,7 +100,7 @@ export function GroupDetail() {
                   return (
                     <li key={uid} className="flex justify-between">
                       <span>{nameOf(uid)}</span>
-                      <span className={n > 0 ? 'text-owed' : n < 0 ? 'text-owe' : 'text-slate-500'}>
+                      <span className={n > 0 ? 'text-owed' : n < 0 ? 'text-owe' : 'text-text-muted'}>
                         {n === 0 ? 'settled' : formatMoney(n, profile.defaultCurrency)}
                       </span>
                     </li>
@@ -108,7 +108,7 @@ export function GroupDetail() {
                 })}
               </ul>
             ) : transfers.length === 0 ? (
-              <p className="text-slate-400 text-sm">All settled up.</p>
+              <p className="text-text-secondary text-sm">All settled up.</p>
             ) : (
               <ul className="space-y-1 text-sm">
                 {transfers.map((t, i) => (
@@ -124,7 +124,7 @@ export function GroupDetail() {
         {tab === 'members' && (
           <div className="space-y-2">
             {group.memberIds.map((uid) => (
-              <div key={uid} className="flex items-center gap-3 p-2 rounded-lg bg-slate-800 border border-slate-700">
+              <div key={uid} className="flex items-center gap-3 p-2 rounded-lg bg-bg-card border border-border-color">
                 <Avatar name={nameOf(uid)} color={colorOf(uid)} size="sm" />
                 <div className="flex-1">{nameOf(uid)}</div>
                 {uid !== profile.id && (

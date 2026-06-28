@@ -26,7 +26,7 @@ export function ConfirmDialog({
         </>
       }
     >
-      <p className="text-slate-300">{message}</p>
+      <p className="text-text-secondary">{message}</p>
     </Modal>
   );
 }

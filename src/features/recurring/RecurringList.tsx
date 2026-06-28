@@ -34,11 +34,11 @@ export function RecurringList() {
               <li key={r.id}>
                 <Link
                   to={`/recurring/${r.id}`}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700/60"
+                  className="flex items-center justify-between p-3 rounded-xl bg-bg-card border border-border-color hover:bg-text-secondary/10"
                 >
                   <div>
                     <div className="font-medium">{r.description}</div>
-                    <div className="text-xs text-slate-400 capitalize">
+                    <div className="text-xs text-text-secondary capitalize">
                       {r.frequency} · next: {formatDate(r.nextDate)} · {r.active ? 'active' : 'paused'}
                     </div>
                   </div>

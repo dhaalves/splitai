@@ -153,7 +153,7 @@ export function ExpenseForm({
     >
       <div className="space-y-4">
         <label className="block">
-          <span className="text-sm text-slate-300">Amount</span>
+          <span className="text-sm text-text-secondary">Amount</span>
           <AmountInput
             aria-label="Amount"
             valueCents={amount}
@@ -163,7 +163,7 @@ export function ExpenseForm({
           />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Description</span>
+          <span className="text-sm text-text-secondary">Description</span>
           <Input
             aria-label="Description"
             value={description}
@@ -172,13 +172,13 @@ export function ExpenseForm({
           />
         </label>
         <div>
-          <span className="text-sm text-slate-300">Category</span>
+          <span className="text-sm text-text-secondary">Category</span>
           <div className="mt-1">
             <CategoryPicker selectedId={category} onSelect={setCategory} />
           </div>
         </div>
         <label className="block">
-          <span className="text-sm text-slate-300">Date</span>
+          <span className="text-sm text-text-secondary">Date</span>
           <Input
             type="date"
             aria-label="Date"
@@ -188,17 +188,17 @@ export function ExpenseForm({
           />
         </label>
         <label className="block">
-          <span className="text-sm text-slate-300">Paid by</span>
+          <span className="text-sm text-text-secondary">Paid by</span>
           <select
             aria-label="Paid by"
             value={paidBy}
             onChange={(e) => setPaidBy(e.target.value)}
-            className="mt-1 w-full rounded-xl bg-slate-800 border border-slate-700 px-3 py-2 text-slate-100"
+            className="mt-1 w-full rounded-xl bg-bg-card border border-border-color px-3 py-2 text-text-primary"
           >
             {participants.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </label>
-        <label className="flex items-center gap-2 text-sm text-slate-300">
+        <label className="flex items-center gap-2 text-sm text-text-secondary">
           <input
             type="checkbox"
             checked={isSettlement}

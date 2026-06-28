@@ -35,7 +35,7 @@ export function SplitEditor({
             key={m}
             onClick={() => onMethodChange(m)}
             className={`px-3 py-1 rounded-lg text-sm capitalize ${
-              method === m ? 'bg-accent text-white' : 'bg-slate-800 text-slate-300'
+              method === m ? 'bg-accent-500 text-white' : 'bg-bg-card text-text-secondary'
             }`}
           >
             {m}
@@ -48,7 +48,7 @@ export function SplitEditor({
             <Avatar name={p.name} color={p.color} size="sm" />
             <div className="flex-1 text-sm">{p.name}</div>
             {method === 'equal' ? (
-              <div className="text-sm text-slate-300">{formatMoney(owed[p.id] ?? 0, currency)}</div>
+              <div className="text-sm text-text-secondary">{formatMoney(owed[p.id] ?? 0, currency)}</div>
             ) : (
               <>
                 <input
@@ -56,10 +56,10 @@ export function SplitEditor({
                   inputMode="decimal"
                   value={shareOf(p.id) || ''}
                   onChange={(e) => onShareChange(p.id, Number(e.target.value))}
-                  className="w-20 rounded-lg bg-slate-800 border border-slate-700 px-2 py-1 text-right text-sm"
+                  className="w-20 rounded-lg bg-bg-card border border-border-color px-2 py-1 text-right text-sm"
                   aria-label={`${p.name} share`}
                 />
-                <span className="text-xs text-slate-400 w-24">
+                <span className="text-xs text-text-secondary w-24">
                   = {formatMoney(owed[p.id] ?? 0, currency)}
                 </span>
               </>
