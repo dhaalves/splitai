@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SplitAI — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ Design Tokens (from tailwind.config.js + elevated) ============ */
+  :root {
+    /* Surfaces — deep navy charcoal */
+    --bg-darker: #090d16;
+    --bg-dark: #0f1626;
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --bg-elevated: rgba(38, 52, 78, 0.55);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+
+    /* Text */
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Accent — emerald primary, amber secondary */
+    --accent: #10b981;
+    --accent-600: #059669;
+    --accent-glow: rgba(16, 185, 129, 0.2);
+    --accent-secondary: #eab308;
+    --accent-secondary-glow: rgba(234, 179, 8, 0.2);
+    --accent-danger: #ef4444;
+
+    /* Balance semantics */
+    --owed: #34d399;
+    --owe: #fb7185;
+
+    /* Gradients */
+    --brand-gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    --button-gradient: linear-gradient(90deg, #10b981 0%, #059669 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 24px rgba(16, 185, 129, 0.25);
+
+    /* Radii */
+    --r-sm: 8px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --r-pill: 999px;
+
+    /* Type */
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Spacing scale */
+    --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+    --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px;
+    --s-12: 48px; --s-16: 64px; --s-20: 80px;
+  }
+
+  /* ============ Reset ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg-darker);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent-glow); color: var(--text-primary); }
+
+  /* ============ Layout ============ */
+  .page { max-width: 1200px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+  .section { margin-top: var(--s-16); scroll-margin-top: var(--s-8); }
+  .section-head { margin-bottom: var(--s-6); }
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: var(--s-2);
+  }
+  .section-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.02em;
+  }
+  .section-desc { color: var(--text-secondary); font-size: 15px; max-width: 560px; margin-top: var(--s-3); }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: var(--s-20) var(--s-6) var(--s-16);
+    border-bottom: 1px solid var(--border);
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16,185,129,0.10), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 30%, rgba(6,182,212,0.08), transparent 70%);
+  }
+  .hero-inner { max-width: 1200px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: var(--r-pill);
+    background: rgba(16,185,129,0.10); border: 1px solid rgba(16,185,129,0.25);
+    font-size: 13px; color: var(--accent); font-weight: 600;
+    margin-bottom: var(--s-6);
+  }
+  .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(40px, 7vw, 80px); line-height: 0.98; letter-spacing: -0.03em;
+  }
+  .hero h1 .gradient { background: var(--brand-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--text-secondary); font-size: clamp(16px, 2vw, 19px); max-width: 580px; margin-top: var(--s-5); }
+  .hero-meta { display: flex; gap: var(--s-6); margin-top: var(--s-8); flex-wrap: wrap; }
+  .hero-meta div { display: flex; flex-direction: column; }
+  .hero-meta dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+  .hero-meta dd { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+
+  /* ============ Cards primitives ============ */
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--r-lg); padding: var(--s-5);
+    box-shadow: var(--shadow-md); backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+  .card h3 { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-bottom: var(--s-2); }
+  .card p { font-size: 14px; color: var(--text-secondary); }
+
+  .grid { display: grid; gap: var(--s-4); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 880px) {
+    .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  /* ============ Color swatches ============ */
+  .swatch { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--border); }
+  .swatch-chip { height: 96px; display: flex; align-items: flex-end; padding: var(--s-3); }
+  .swatch-info { padding: var(--s-3); background: var(--bg-card); border-top: 1px solid var(--border); }
+  .swatch-name { font-size: 13px; font-weight: 600; }
+  .swatch-val { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ============ Typography specimen ============ */
+  .type-row { display: flex; align-items: baseline; gap: var(--s-4); padding: var(--s-3) 0; border-bottom: 1px solid var(--border); }
+  .type-row:last-child { border-bottom: none; }
+  .type-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); min-width: 120px; flex-shrink: 0; }
+  .type-sample { flex: 1; }
+
+  /* ============ Buttons ============ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 20px; border-radius: var(--r-md); border: none;
+    font-family: var(--font-sans); font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
+  }
+  .btn-primary { background: var(--button-gradient); color: white; box-shadow: 0 4px 14px rgba(16,185,129,0.3); }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
+  .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-elevated); border-color: var(--accent); }
+  .btn-ghost { background: transparent; color: var(--text-secondary); }
+  .btn-ghost:hover { color: var(--accent); background: rgba(16,185,129,0.08); }
+  .btn-danger { background: rgba(239,68,68,0.12); color: var(--accent-danger); border: 1px solid rgba(239,68,68,0.3); }
+  .btn-danger:hover { background: rgba(239,68,68,0.2); }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  .btn-icon { padding: 10px; width: 40px; height: 40px; }
+
+  /* ============ Inputs ============ */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+  .input, .textarea, .select {
+    background: var(--bg-dark); border: 1px solid var(--border-strong);
+    border-radius: var(--r-md); padding: 12px 14px;
+    color: var(--text-primary); font-family: var(--font-sans); font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
+  }
+  .input:focus, .textarea:focus, .select:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+  }
+  .input::placeholder { color: var(--text-muted); }
+  .textarea { resize: vertical; min-height: 80px; }
+
+  /* ============ Chips / Badges ============ */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: var(--r-pill);
+    font-size: 12px; font-weight: 600;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .chip-accent { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); color: var(--accent); }
+  .chip-owed { background: rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.3); color: var(--owed); }
+  .chip-owe { background: rgba(251,113,133,0.12); border-color: rgba(251,113,133,0.3); color: var(--owe); }
+  .chip-warn { background: rgba(234,179,8,0.12); border-color: rgba(234,179,8,0.3); color: var(--accent-secondary); }
+
+  /* ============ Avatar ============ */
+  .avatar {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-weight: 700; color: white;
+    font-family: var(--font-display); flex-shrink: 0;
+  }
+  .avatar-sm { width: 32px; height: 32px; font-size: 13px; }
+  .avatar-md { width: 40px; height: 40px; font-size: 15px; }
+  .avatar-lg { width: 56px; height: 56px; font-size: 20px; }
+
+  /* ============ Phone mockup ============ */
+  .phone-frame {
+    width: 360px; max-width: 100%; margin: 0 auto;
+    border-radius: 44px; border: 8px solid #1a2236;
+    background: var(--bg-darker); overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+  .phone-screen { height: 720px; overflow-y: auto; overflow-x: hidden; }
+  .phone-screen::-webkit-scrollbar { display: none; }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 120px; height: 28px; background: #1a2236;
+    border-radius: 0 0 18px 18px; z-index: 10;
+  }
+  .phone-status {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px 8px; font-size: 13px; font-weight: 600;
+    color: var(--text-primary);
+  }
+  .phone-status .icons { display: flex; gap: 6px; align-items: center; opacity: 0.8; }
+  .phone-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--s-4) var(--s-4) var(--s-2);
+  }
+  .phone-header h2 { font-family: var(--font-display); font-weight: 800; font-size: 24px; }
+  .phone-body { padding: var(--s-2) var(--s-4) var(--s-20); }
+
+  .bottom-nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 10px 0 22px; background: rgba(15,22,38,0.95);
+    border-top: 1px solid var(--border); backdrop-filter: blur(16px);
+  }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: var(--text-muted); }
+  .nav-item.active { color: var(--accent); }
+  .nav-item .ic { font-size: 18px; }
+
+  .fab {
+    position: absolute; bottom: 78px; right: 18px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--button-gradient); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; box-shadow: 0 8px 24px rgba(16,185,129,0.4);
+    border: none; cursor: pointer; z-index: 5;
+  }
+
+  /* ============ Dashboard mock components ============ */
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .summary-box {
+    border-radius: var(--r-md); background: var(--bg-card);
+    border: 1px solid var(--border); padding: 14px;
+  }
+  .summary-box .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .summary-box .val { font-family: var(--font-display); font-weight: 800; font-size: 22px; margin-top: 4px; }
+  .val-owe { color: var(--owe); }
+  .val-owed { color: var(--owed); }
+
+  .chart-card { border-radius: var(--r-md); background: var(--bg-card); border: 1px solid var(--border); padding: 14px; margin-bottom: 14px; }
+  .chart-card .title { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-bottom: 12px; }
+  .bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
+  .bar { flex: 1; border-radius: 6px 6px 0 0; background: var(--brand-gradient); opacity: 0.85; transition: opacity 0.2s; position: relative; }
+  .bar:hover { opacity: 1; }
+  .bar-labels { display: flex; gap: 8px; margin-top: 6px; }
+  .bar-labels span { flex: 1; text-align: center; font-size: 10px; color: var(--text-muted); }
+
+  .expense-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px; border-radius: var(--r-md);
+    background: var(--bg-card); border: 1px solid var(--border);
+    margin-bottom: 8px; transition: border-color 0.2s;
+  }
+  .expense-row:hover { border-color: var(--border-strong); }
+  .expense-cat {
+    width: 40px; height: 40px; border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .expense-info { flex: 1; min-width: 0; }
+  .expense-info .desc { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .expense-info .meta { font-size: 12px; color: var(--text-muted); }
+  .expense-amount { font-weight: 700; font-size: 15px; font-family: var(--font-display); }
+
+  /* ============ Sidebar mock ============ */
+  .sidebar-mock {
+    width: 240px; background: var(--bg-dark);
+    border-right: 1px solid var(--border);
+    padding: var(--s-5) var(--s-4);
+    display: flex; flex-direction: column;
+    border-radius: var(--r-lg) 0 0 var(--r-lg);
+  }
+  .sidebar-logo { font-family: var(--font-display); font-weight: 800; font-size: 20px; margin-bottom: var(--s-6); padding: 0 var(--s-2); }
+  .sidebar-logo .dot { color: var(--accent); }
+  .nav-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: var(--r-md);
+    font-size: 14px; font-weight: 500; color: var(--text-secondary);
+    transition: all 0.2s; margin-bottom: 4px; cursor: pointer;
+  }
+  .nav-link:hover { background: var(--bg-card); color: var(--text-primary); }
+  .nav-link.active { background: var(--accent); color: white; font-weight: 600; }
+  .nav-link .ic { width: 20px; text-align: center; }
+
+  /* ============ Toast ============ */
+  .toast {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; border-radius: var(--r-md);
+    background: var(--bg-dark); border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-lg); font-size: 14px;
+    max-width: 320px;
+  }
+  .toast-success { border-left: 3px solid var(--accent); }
+  .toast-error { border-left: 3px solid var(--accent-danger); }
+
+  /* ============ Modal ============ */
+  .modal-demo {
+    background: var(--bg-dark); border: 1px solid var(--border);
+    border-radius: var(--r-lg); padding: var(--s-6);
+    max-width: 400px; width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-demo h3 { font-family: var(--font-display); font-weight: 700; font-size: 18px; margin-bottom: var(--s-2); }
+  .modal-demo p { font-size: 14px; color: var(--text-secondary); margin-bottom: var(--s-5); }
+
+  /* ============ Category grid ============ */
+  .cat-tile {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: var(--s-4) var(--s-2); border-radius: var(--r-md);
+    background: var(--bg-card); border: 1px solid var(--border);
+    transition: all 0.2s; cursor: pointer;
+  }
+  .cat-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .cat-icon { width: 44px; height: 44px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .cat-name { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+  /* ============ Balance badge ============ */
+  .balance-positive { color: var(--owed); font-weight: 700; }
+  .balance-negative { color: var(--owe); font-weight: 700; }
+  .balance-zero { color: var(--text-muted); }
+
+  /* ============ Shadow demo ============ */
+  .shadow-demo { width: 80px; height: 80px; border-radius: var(--r-md); background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+
+  /* ============ Code block ============ */
+  .code-block {
+    background: var(--bg-dark); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: var(--s-4);
+    font-family: var(--font-mono); font-size: 13px;
+    color: var(--text-secondary); overflow-x: auto;
+    line-height: 1.7;
+  }
+  .code-block .key { color: #7dd3fc; }
+  .code-block .val { color: var(--accent); }
+  .code-block .comment { color: var(--text-muted); }
+
+  /* ============ Footer ============ */
+  .footer {
+    margin-top: var(--s-20); padding: var(--s-10) var(--s-6);
+    border-top: 1px solid var(--border); text-align: center;
+  }
+  .footer p { color: var(--text-muted); font-size: 13px; }
+  .footer .logo { font-family: var(--font-display); font-weight: 800; font-size: 18px; margin-bottom: var(--s-2); }
+  .footer .logo .dot { color: var(--accent); }
+
+  /* ============ Misc ============ */
+  .row { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+  .stack { display: flex; flex-direction: column; gap: var(--s-3); }
+  .divider { height: 1px; background: var(--border); margin: var(--s-6) 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="dot"></span> Design System v1.0</div>
+    <h1>Split<span class="gradient">AI</span></h1>
+    <p>A modern, clean, and professional visual language for the SplitAI expense splitter — dark-theme, mobile-first, and built on a disciplined token system.</p>
+    <dl class="hero-meta">
+      <div><dt>Theme</dt><dd>Dark · Mobile-first</dd></div>
+      <div><dt>Stack</dt><dd>React 18 · TS · Tailwind</dd></div>
+      <div><dt>Typography</dt><dd>Outfit · Plus Jakarta</dd></div>
+      <div><dt>Accent</dt><dd>Emerald #10B981</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="page">
+
+<!-- ============ COLOR ============ -->
+<section class="section" id="color">
+  <div class="section-head">
+    <div class="section-eyebrow">01 — Foundations</div>
+    <h2 class="section-title">Color</h2>
+    <p class="section-desc">A restrained palette: deep navy surfaces, one emerald accent, and semantic owed/owe signals. High contrast for readability, low cognitive load for action.</p>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:var(--s-3);color:var(--text-secondary)">Surfaces</h3>
+  <div class="grid grid-4" style="margin-bottom:var(--s-6)">
+    <div class="swatch"><div class="swatch-chip" style="background:#090d16"></div><div class="swatch-info"><div class="swatch-name">bg-darker</div><div class="swatch-val">#090D16</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#0f1626"></div><div class="swatch-info"><div class="swatch-name">bg-dark</div><div class="swatch-val">#0F1626</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:rgba(30,41,59,0.7);backdrop-filter:blur(8px)"></div><div class="swatch-info"><div class="swatch-name">bg-card</div><div class="swatch-val">rgba(30,41,59,.7)</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:rgba(255,255,255,0.08)"></div><div class="swatch-info"><div class="swatch-name">border</div><div class="swatch-val">rgba(255,255,255,.08)</div></div></div>
+  </div>
+
+  <h3 style="font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:var(--s-3);color:var(--text-secondary)">Accent &amp; Semantics</h3>
+  <div class="grid grid-4">
+    <div class="swatch"><div class="swatch-chip" style="background:#10b981"></div><div class="swatch-info"><div class="swatch-name">accent</div><div class="swatch-val">#10B981</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#059669"></div><div class="swatch-info"><div class="swatch-name">accent-600</div><div class="swatch-val">#059669</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#eab308"></div><div class="swatch-info"><div class="swatch-name">secondary</div><div class="swatch-val">#EAB308</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#ef4444"></div><div class="swatch-info"><div class="swatch-name">danger</div><div class="swatch-val">#EF4444</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#34d399"></div><div class="swatch-info"><div class="swatch-name">owed</div><div class="swatch-val">#34D399</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#fb7185"></div><div class="swatch-info"><div class="swatch-name">owe</div><div class="swatch-val">#FB7185</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#f8fafc"></div><div class="swatch-info"><div class="swatch-name">text-primary</div><div class="swatch-val">#F8FAFC</div></div></div>
+    <div class="swatch"><div class="swatch-chip" style="background:#94a3b8"></div><div class="swatch-info"><div class="swatch-name">text-secondary</div><div class="swatch-val">#94A3B8</div></div></div>
+  </div>
+
+  <div class="card" style="margin-top:var(--s-6)">
+    <h3>Brand Gradient</h3>
+    <p>The signature gradient used for hero text, FAB, and primary buttons.</p>
+    <div style="height:56px;border-radius:var(--r-md);background:var(--brand-gradient);margin-top:var(--s-3);box-shadow:var(--shadow-glow)"></div>
+    <div class="swatch-val" style="margin-top:var(--s-2)">linear-gradient(135deg, #10B981 → #06B6D4)</div>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section class="section" id="typography">
+  <div class="section-head">
+    <div class="section-eyebrow">02 — Foundations</div>
+    <h2 class="section-title">Typography</h2>
+    <p class="section-desc">Outfit for display headlines (geometric, confident), Plus Jakarta Sans for body and UI (warm, highly legible at small sizes), JetBrains Mono for data and code.</p>
+  </div>
+
+  <div class="card">
+    <div class="type-row">
+      <span class="type-label">Display / 900</span>
+      <span class="type-sample" style="font-family:var(--font-display);font-weight:900;font-size:48px;letter-spacing:-0.03em;line-height:1">Split expenses fairly</span>
+    </div>
+    <div class="type-row">
+      <span class="type-label">Display / 800</span>
+      <span class="type-sample" style="font-family:var(--font-display);font-weight:800;font-size:32px;letter-spacing:-0.02em">Track who owes whom</span>
+    </div>
+    <div class="type-row">
+      <span class="type-label">Body / 600</span>
+      <span class="type-sample" style="font-weight:600;font-size:17px">You are owed R$ 240,00</span>
+    </div>
+    <div class="type-row">
+      <span class="type-label">Body / 400</span>
+      <span class="type-sample" style="font-weight:400;font-size:15px;color:var(--text-secondary)">All data stays on your device — no backend, no tracking, no cloud.</span>
+    </div>
+    <div class="type-row">
+      <span class="type-label">Mono / 500</span>
+      <span class="type-sample" style="font-family:var(--font-mono);font-weight:500;font-size:14px;color:var(--accent)">R$ 1.250,00 · 125000 cents</span>
+    </div>
+    <div class="type-row">
+      <span class="type-label">Caption / 400</span>
+      <span class="type-sample" style="font-weight:400;font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">Last updated 2 hours ago</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPACING & RADII ============ -->
+<section class="section" id="spacing">
+  <div class="section-head">
+    <div class="section-eyebrow">03 — Foundations</div>
+    <h2 class="section-title">Spacing, Radii &amp; Elevation</h2>
+    <p class="section-desc">A 4px base scale for rhythm. Three radii (8 / 16 / 24) keep corners soft but not bubbly. Shadows are deep and layered — the dark theme earns dramatic depth.</p>
+  </div>
+
+  <div class="grid grid-3">
+    <div class="card">
+      <h3>Radii</h3>
+      <div class="stack" style="margin-top:var(--s-3)">
+        <div class="row"><div style="width:48px;height:48px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:8px"></div><span class="swatch-val">sm — 8px</span></div>
+        <div class="row"><div style="width:48px;height:48px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:16px"></div><span class="swatch-val">md — 16px</span></div>
+        <div class="row"><div style="width:48px;height:48px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:24px"></div><span class="swatch-val">lg — 24px</span></div>
+        <div class="row"><div style="width:48px;height:48px;background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:999px"></div><span class="swatch-val">pill — 999px</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Elevation</h3>
+      <div class="stack" style="margin-top:var(--s-3)">
+        <div class="row"><div class="shadow-demo" style="box-shadow:var(--shadow-sm)">sm</div><span class="swatch-val">0 2px 8px / .2</span></div>
+        <div class="row"><div class="shadow-demo" style="box-shadow:var(--shadow-md)">md</div><span class="swatch-val">0 8px 30px / .4</span></div>
+        <div class="row"><div class="shadow-demo" style="box-shadow:var(--shadow-lg)">lg</div><span class="swatch-val">0 16px 48px / .5</span></div>
+        <div class="row"><div class="shadow-demo" style="box-shadow:var(--shadow-glow);border-color:rgba(16,185,129,0.3)">glow</div><span class="swatch-val">0 0 24px / .25</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Spacing Scale</h3>
+      <div class="stack" style="margin-top:var(--s-3)">
+        <div class="row"><div style="height:16px;width:4px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">4 · s-1</span></div>
+        <div class="row"><div style="height:16px;width:8px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">8 · s-2</span></div>
+        <div class="row"><div style="height:16px;width:12px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">12 · s-3</span></div>
+        <div class="row"><div style="height:16px;width:16px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">16 · s-4</span></div>
+        <div class="row"><div style="height:16px;width:24px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">24 · s-6</span></div>
+        <div class="row"><div style="height:16px;width:40px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">40 · s-10</span></div>
+        <div class="row"><div style="height:16px;width:64px;background:var(--accent);border-radius:2px"></div><span class="swatch-val">64 · s-16</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPONENTS ============ -->
+<section class="section" id="components">
+  <div class="section-head">
+    <div class="section-eyebrow">04 — Components</div>
+    <h2 class="section-title">UI Primitives</h2>
+    <p class="section-desc">The building blocks: buttons, inputs, chips, avatars, and badges — all composed from the token system above.</p>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:var(--s-4)">
+    <div class="card">
+      <h3>Buttons</h3>
+      <p>Primary gradient for action, secondary for neutral, ghost for low-priority, danger for destructive.</p>
+      <div class="stack" style="margin-top:var(--s-4)">
+        <div class="row">
+          <button class="btn btn-primary">Add expense</button>
+          <button class="btn btn-secondary">Cancel</button>
+          <button class="btn btn-ghost">Skip</button>
+          <button class="btn btn-danger">Delete</button>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary btn-sm">Save</button>
+          <button class="btn btn-secondary btn-sm">Edit</button>
+          <button class="btn btn-ghost btn-sm">Share</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Inputs</h3>
+      <p>Dark inputs with focus glow ring in the accent color.</p>
+      <div class="stack" style="margin-top:var(--s-4)">
+        <div class="field"><label class="label">Description</label><input class="input" placeholder="Dinner at restaurant" value="Dinner at Bella Vista"></div>
+        <div class="field"><label class="label">Amount (BRL)</label><input class="input" value="R$ 125,00"></div>
+        <div class="field"><label class="label">Notes</label><textarea class="textarea" placeholder="Optional notes…">Split equally between 4 people.</textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-3">
+    <div class="card">
+      <h3>Chips &amp; Badges</h3>
+      <div class="row" style="margin-top:var(--s-3)">
+        <span class="chip chip-accent">Equal split</span>
+        <span class="chip chip-owed">You are owed</span>
+        <span class="chip chip-owe">You owe</span>
+        <span class="chip chip-warn">Pending</span>
+        <span class="chip">Food</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Avatars</h3>
+      <div class="row" style="margin-top:var(--s-3)">
+        <div class="avatar avatar-sm" style="background:#10b981">DA</div>
+        <div class="avatar avatar-md" style="background:#06b6d4">JS</div>
+        <div class="avatar avatar-lg" style="background:#eab308">ML</div>
+        <div class="avatar avatar-md" style="background:#ef4444">RB</div>
+        <div class="avatar avatar-md" style="background:#8b5cf6">KP</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Balance Badges</h3>
+      <div class="stack" style="margin-top:var(--s-3)">
+        <div class="row" style="justify-content:space-between"><span style="font-size:14px;color:var(--text-secondary)">Marina owes you</span><span class="balance-positive">+R$ 80,00</span></div>
+        <div class="row" style="justify-content:space-between"><span style="font-size:14px;color:var(--text-secondary)">You owe Rafael</span><span class="balance-negative">−R$ 45,00</span></div>
+        <div class="row" style="justify-content:space-between"><span style="font-size:14px;color:var(--text-secondary)">João</span><span class="balance-zero">settled up</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATEGORIES ============ -->
+<section class="section" id="categories">
+  <div class="section-head">
+    <div class="section-eyebrow">05 — Content</div>
+    <h2 class="section-title">Categories</h2>
+    <p class="section-desc">Default expense categories with colored icon tiles. Users can extend with custom categories.</p>
+  </div>
+
+  <div class="grid grid-4" style="gap:var(--s-3)">
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(16,185,129,0.15)">🍔</div><span class="cat-name">Food</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(6,182,212,0.15)">🚕</div><span class="cat-name">Transport</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(139,92,246,0.15)">🏠</div><span class="cat-name">Rent</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(234,179,8,0.15)">🎬</div><span class="cat-name">Entertainment</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(239,68,68,0.15)">💊</div><span class="cat-name">Health</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(52,211,153,0.15)">🛒</div><span class="cat-name">Groceries</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(251,113,133,0.15)">✈️</div><span class="cat-name">Travel</span></div>
+    <div class="cat-tile"><div class="cat-icon" style="background:rgba(148,163,184,0.15)">📦</div><span class="cat-name">Other</span></div>
+  </div>
+</section>
+
+<!-- ============ PHONE MOCKUP — DASHBOARD ============ -->
+<section class="section" id="dashboard-mock">
+  <div class="section-head">
+    <div class="section-eyebrow">06 — Screens</div>
+    <h2 class="section-title">Dashboard</h2>
+    <p class="section-desc">The home screen: balance summary, monthly spending chart, recent expenses, and a floating action button to add new expenses.</p>
+  </div>
+
+  <div class="row" style="justify-content:center;gap:var(--s-10);flex-wrap:wrap">
+    <!-- Phone -->
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-status">
+          <span>9:41</span>
+          <span class="icons">📶 🔋</span>
+        </div>
+        <div class="phone-header">
+          <h2>SplitAI</h2>
+          <div class="avatar avatar-sm" style="background:#10b981">DA</div>
+        </div>
+        <div class="phone-body">
+          <div class="summary-grid">
+            <div class="summary-box">
+              <div class="lbl">You owe</div>
+              <div class="val val-owe">R$ 45,00</div>
+            </div>
+            <div class="summary-box">
+              <div class="lbl">You are owed</div>
+              <div class="val val-owed">R$ 240,00</div>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="title">Monthly spending</div>
+            <div class="bars">
+              <div class="bar" style="height:40%"></div>
+              <div class="bar" style="height:65%"></div>
+              <div class="bar" style="height:50%"></div>
+              <div class="bar" style="height:80%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:95%"></div>
+            </div>
+            <div class="bar-labels"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span></div>
+          </div>
+
+          <div style="font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:10px">Recent expenses</div>
+
+          <div class="expense-row">
+            <div class="expense-cat" style="background:rgba(16,185,129,0.15)">🍔</div>
+            <div class="expense-info"><div class="desc">Dinner at Bella Vista</div><div class="meta">Today · 4 people · Equal</div></div>
+            <div class="expense-amount" style="color:var(--owed)">R$ 125</div>
+          </div>
+          <div class="expense-row">
+            <div class="expense-cat" style="background:rgba(6,182,212,0.15)">🚕</div>
+            <div class="expense-info"><div class="desc">Airport taxi</div><div class="meta">Yesterday · 3 people · Equal</div></div>
+            <div class="expense-amount" style="color:var(--owe)">R$ 80</div>
+          </div>
+          <div class="expense-row">
+            <div class="expense-cat" style="background:rgba(139,92,246,0.15)">🏠</div>
+            <div class="expense-info"><div class="desc">June rent</div><div class="meta">Jun 1 · 2 people · 50/50</div></div>
+            <div class="expense-amount" style="color:var(--owed)">R$ 1.200</div>
+          </div>
+          <div class="expense-row">
+            <div class="expense-cat" style="background:rgba(234,179,8,0.15)">🎬</div>
+            <div class="expense-info"><div class="desc">Cinema tickets</div><div class="meta">May 28 · 2 people · Equal</div></div>
+            <div class="expense-amount" style="color:var(--owed)">R$ 60</div>
+          </div>
+        </div>
+      </div>
+      <button class="fab">+</button>
+      <div class="bottom-nav">
+        <div class="nav-item active"><span class="ic">🏠</span>Home</div>
+        <div class="nav-item"><span class="ic">👥</span>Groups</div>
+        <div class="nav-item"><span class="ic">🤝</span>Friends</div>
+        <div class="nav-item"><span class="ic">⚙️</span>More</div>
+      </div>
+    </div>
+
+    <!-- Sidebar (desktop) -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3)">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Desktop · Sidebar</div>
+      <div style="display:flex;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--border)">
+        <div class="sidebar-mock">
+          <div class="sidebar-logo">Split<span class="dot">AI</span></div>
+          <div class="nav-link active"><span class="ic">🏠</span>Home</div>
+          <div class="nav-link"><span class="ic">👥</span>Groups</div>
+          <div class="nav-link"><span class="ic">🤝</span>Friends</div>
+          <div class="nav-link"><span class="ic">📊</span>Dashboard</div>
+          <div class="nav-link"><span class="ic">🔍</span>Search</div>
+          <div class="nav-link"><span class="ic">🔁</span>Recurring</div>
+          <div class="nav-link"><span class="ic">⚙️</span>More</div>
+          <div style="flex:1"></div>
+          <div style="display:flex;align-items:center;gap:10px;padding-top:var(--s-4);border-top:1px solid var(--border)">
+            <div class="avatar avatar-sm" style="background:#10b981">DA</div>
+            <div><div style="font-size:13px;font-weight:600">Daniel</div><div style="font-size:11px;color:var(--text-muted)">daniel@email.com</div></div>
+          </div>
+        </div>
+        <div style="width:320px;padding:var(--s-5);background:var(--bg-darker)">
+          <div style="font-family:var(--font-display);font-weight:800;font-size:22px;margin-bottom:var(--s-4)">Dashboard</div>
+          <div class="summary-grid" style="margin-bottom:var(--s-4)">
+            <div class="summary-box"><div class="lbl">You owe</div><div class="val val-owe">R$ 45</div></div>
+            <div class="summary-box"><div class="lbl">Owed</div><div class="val val-owed">R$ 240</div></div>
+          </div>
+          <div class="chart-card" style="margin-bottom:0">
+            <div class="title">Monthly spending</div>
+            <div class="bars"><div class="bar" style="height:30%"></div><div class="bar" style="height:55%"></div><div class="bar" style="height:45%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:85%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPENSE DETAIL + SETTLE ============ -->
+<section class="section" id="flows">
+  <div class="section-head">
+    <div class="section-eyebrow">07 — Screens</div>
+    <h2 class="section-title">Expense Detail &amp; Settle Up</h2>
+    <p class="section-desc">Two core flows: viewing an expense with its split breakdown, and settling balances with simplified payment suggestions.</p>
+  </div>
+
+  <div class="grid grid-2">
+    <!-- Expense Detail -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:var(--s-4)">
+        <h3 style="margin:0">Expense detail</h3>
+        <span class="chip chip-accent">Equal split</span>
+      </div>
+      <div style="text-align:center;padding:var(--s-6) 0;border-bottom:1px solid var(--border)">
+        <div class="expense-cat" style="background:rgba(16,185,129,0.15);width:64px;height:64px;font-size:28px;margin:0 auto var(--s-3)">🍔</div>
+        <div style="font-family:var(--font-display);font-weight:800;font-size:28px">R$ 125,00</div>
+        <div style="color:var(--text-secondary);font-size:14px">Dinner at Bella Vista</div>
+        <div style="color:var(--text-muted);font-size:12px;margin-top:4px">June 29, 2026 · Food</div>
+      </div>
+      <div style="padding-top:var(--s-4)">
+        <div style="font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:var(--s-3)">Paid by Daniel, split between 4:</div>
+        <div class="stack">
+          <div class="row" style="justify-content:space-between"><div class="row"><div class="avatar avatar-sm" style="background:#10b981">DA</div><span style="font-size:14px">Daniel</span><span class="chip" style="font-size:11px;padding:2px 8px">paid</span></div><span style="font-weight:700;font-size:14px">R$ 31,25</span></div>
+          <div class="row" style="justify-content:space-between"><div class="row"><div class="avatar avatar-sm" style="background:#06b6d4">JS</div><span style="font-size:14px">João</span></div><span style="font-weight:700;font-size:14px;color:var(--owe)">owes R$ 31,25</span></div>
+          <div class="row" style="justify-content:space-between"><div class="row"><div class="avatar avatar-sm" style="background:#eab308">ML</div><span style="font-size:14px">Marina</span></div><span style="font-weight:700;font-size:14px;color:var(--owe)">owes R$ 31,25</span></div>
+          <div class="row" style="justify-content:space-between"><div class="row"><div class="avatar avatar-sm" style="background:#ef4444">RB</div><span style="font-size:14px">Rafael</span></div><span style="font-weight:700;font-size:14px;color:var(--owe)">owes R$ 31,25</span></div>
+        </div>
+        <div class="row" style="margin-top:var(--s-5)">
+          <button class="btn btn-secondary btn-sm">Edit</button>
+          <button class="btn btn-ghost btn-sm">Duplicate</button>
+          <button class="btn btn-danger btn-sm" style="margin-left:auto">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settle Up -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:var(--s-4)">
+        <h3 style="margin:0">Settle up</h3>
+        <span class="chip chip-warn">3 suggestions</span>
+      </div>
+      <p style="margin-bottom:var(--s-4)">Simplified payments to resolve all balances with the fewest transactions.</p>
+      <div class="stack">
+        <div style="display:flex;align-items:center;gap:var(--s-3);padding:var(--s-4);border-radius:var(--r-md);background:var(--bg-dark);border:1px solid var(--border)">
+          <div class="avatar avatar-sm" style="background:#06b6d4">JS</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600">João → Daniel</div>
+            <div style="font-size:12px;color:var(--text-muted)">Settles Marina's debt too</div>
+          </div>
+          <span style="font-weight:700;color:var(--owed)">R$ 80,00</span>
+          <button class="btn btn-primary btn-sm">Settle</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--s-3);padding:var(--s-4);border-radius:var(--r-md);background:var(--bg-dark);border:1px solid var(--border)">
+          <div class="avatar avatar-sm" style="background:#ef4444">RB</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600">Daniel → Rafael</div>
+            <div style="font-size:12px;color:var(--text-muted)">Remaining balance</div>
+          </div>
+          <span style="font-weight:700;color:var(--owe)">R$ 45,00</span>
+          <button class="btn btn-primary btn-sm">Settle</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--s-3);padding:var(--s-4);border-radius:var(--r-md);background:var(--bg-dark);border:1px solid var(--border)">
+          <div class="avatar avatar-sm" style="background:#eab308">ML</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600">Marina → Daniel</div>
+            <div style="font-size:12px;color:var(--text-muted)">From cinema + dinner</div>
+          </div>
+          <span style="font-weight:700;color:var(--owed)">R$ 115,00</span>
+          <button class="btn btn-primary btn-sm">Settle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODAL + TOASTS ============ -->
+<section class="section" id="overlays">
+  <div class="section-head">
+    <div class="section-eyebrow">08 — Overlays</div>
+    <h2 class="section-title">Modals &amp; Toasts</h2>
+    <p class="section-desc">Backdrop-blurred modals for focused tasks. Toasts with colored left-border accent for success/error feedback.</p>
+  </div>
+
+  <div class="grid grid-2">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-4);padding:var(--s-8);border-radius:var(--r-lg);background:rgba(0,0,0,0.4);border:1px solid var(--border)">
+      <div class="modal-demo">
+        <h3>Delete expense?</h3>
+        <p>This will permanently remove "Dinner at Bella Vista" and recalculate all balances. This action cannot be undone.</p>
+        <div class="row" style="justify-content:flex-end">
+          <button class="btn btn-ghost btn-sm">Cancel</button>
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Toasts</h3>
+      <p>Transient feedback for user actions.</p>
+      <div class="stack" style="margin-top:var(--s-4)">
+        <div class="toast toast-success">
+          <span style="font-size:18px">✓</span>
+          <span>Expense added successfully</span>
+        </div>
+        <div class="toast toast-error">
+          <span style="font-size:18px">✕</span>
+          <span>Failed to import backup — invalid format</span>
+        </div>
+        <div class="toast" style="border-left:3px solid var(--accent-secondary)">
+          <span style="font-size:18px">⏳</span>
+          <span>Recurring expense generated for June</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOKENS CODE ============ -->
+<section class="section" id="tokens">
+  <div class="section-head">
+    <div class="section-eyebrow">09 — Reference</div>
+    <h2 class="section-title">Token Reference</h2>
+    <p class="section-desc">The complete token map as consumed by Tailwind. Copy these values into <code style="font-family:var(--font-mono);color:var(--accent);font-size:13px">tailwind.config.js</code> or extend them.</p>
+  </div>
+
+  <div class="code-block"><span class="comment">// tailwind.config.js — theme.extend</span>
+{
+  <span class="key">colors</span>: {
+    bg: {
+      darker: <span class="val">'#090d16'</span>,
+      dark:   <span class="val">'#0f1626'</span>,
+      card:   <span class="val">'rgba(30, 41, 59, 0.7)'</span>,
+    },
+    border: { color: <span class="val">'rgba(255, 255, 255, 0.08)'</span> },
+    text: {
+      primary:   <span class="val">'#f8fafc'</span>,
+      secondary: <span class="val">'#94a3b8'</span>,
+      muted:     <span class="val">'#64748b'</span>,
+    },
+    accent: {
+      DEFAULT:  <span class="val">'#10b981'</span>,
+      600:      <span class="val">'#059669'</span>,
+      glow:     <span class="val">'rgba(16, 185, 129, 0.2)'</span>,
+      secondary: <span class="val">'#eab308'</span>,
+      danger:   <span class="val">'#ef4444'</span>,
+    },
+    owed: <span class="val">'#34d399'</span>,
+    owe:  <span class="val">'#fb7185'</span>,
+  },
+  <span class="key">fontFamily</span>: {
+    sans:    [<span class="val">'Plus Jakarta Sans'</span>, ...],
+    display: [<span class="val">'Outfit'</span>, ...],
+  },
+  <span class="key">boxShadow</span>: { sm, md, lg },
+  <span class="key">borderRadius</span>: { sm: <span class="val">'8px'</span>, md: <span class="val">'16px'</span>, lg: <span class="val">'24px'</span> },
+  <span class="key">backgroundImage</span>: {
+    <span class="val">'brand-gradient'</span>:  <span class="val">'linear-gradient(135deg, #10b981 → #06b6d4)'</span>,
+    <span class="val">'button-gradient'</span>: <span class="val">'linear-gradient(90deg, #10b981 → #059669)'</span>,
+  }
+}</div>
+</section>
+
+</div><!-- /page -->
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="logo">Split<span class="dot">AI</span></div>
+  <p>Design System v1.0 · Dark theme · Mobile-first · Client-only · IndexedDB</p>
+  <p style="margin-top:var(--s-2);font-size:11px">Generated from project tokens — tailwind.config.js + src/index.css</p>
+</footer>
+
+</body>
+</html>
