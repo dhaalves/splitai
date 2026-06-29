@@ -24,12 +24,13 @@ export function ExpenseList({ groupId = null, friendId = null, limit }: ExpenseL
   if (limit) filtered = filtered.slice(0, limit);
 
   if (filtered.length === 0) {
+    const newExpenseUrl = `/expenses/new${groupId ? `?group=${groupId}` : friendId ? `?friend=${friendId}` : ''}`;
     return (
       <EmptyState
         icon="🧾"
         title="No expenses yet"
         description="Add your first expense to start tracking."
-        action={<Button onClick={() => navigate('/expenses/new')}>Add expense</Button>}
+        action={<Button onClick={() => navigate(newExpenseUrl)}>Add expense</Button>}
       />
     );
   }
