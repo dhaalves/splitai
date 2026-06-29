@@ -16,7 +16,7 @@ export function Sidebar() {
   const profile = useProfile();
   return (
     <aside className="hidden md:flex flex-col w-60 bg-bg-dark border-r border-border-color p-4">
-      <div className="text-xl font-bold text-text-primary mb-6 px-2">SplitAI</div>
+      <div className="text-xl font-bold font-display text-text-primary mb-6 px-2">Split<span className="text-gradient">AI</span></div>
       <nav className="flex-1 flex flex-col gap-1">
         {links.map((l) => (
           <NavLink
@@ -24,10 +24,10 @@ export function Sidebar() {
             to={l.to}
             end={l.to === '/'}
             className={({ isActive }) =>
-              `px-3 py-2 rounded-lg flex items-center gap-3 ${isActive ? 'bg-accent-500 text-white' : 'text-text-secondary hover:bg-bg-card'}`
+              `px-3 py-2.5 rounded-xl flex items-center gap-3 font-medium transition-all ${isActive ? 'bg-accent-500 text-white shadow-glow-sm' : 'text-text-secondary hover:bg-bg-card hover:text-text-primary'}`
             }
           >
-            <span>{l.icon}</span>
+            <span className="text-base">{l.icon}</span>
             <span>{l.label}</span>
           </NavLink>
         ))}

@@ -13,13 +13,13 @@ export function SummaryCards() {
   const youAreOwed = Math.max(0, net[profile.id] ?? 0);
   return (
     <div className="grid grid-cols-2 gap-3">
-      <div className="rounded-xl bg-bg-card border border-border-color p-4">
-        <div className="text-xs uppercase text-text-muted">You owe</div>
-        <div className="text-xl font-bold text-owe">{formatMoney(youOwe, profile.defaultCurrency)}</div>
+      <div className="rounded-xl bg-bg-card border border-border-color p-4 transition-all hover:border-border-strong">
+        <div className="text-xs uppercase tracking-wide text-text-muted font-medium">You owe</div>
+        <div className="text-xl font-bold font-display text-owe mt-1">{formatMoney(youOwe, profile.defaultCurrency)}</div>
       </div>
-      <div className="rounded-xl bg-bg-card border border-border-color p-4">
-        <div className="text-xs uppercase text-text-muted">You are owed</div>
-        <div className="text-xl font-bold text-owed">{formatMoney(youAreOwed, profile.defaultCurrency)}</div>
+      <div className="rounded-xl bg-bg-card border border-border-color p-4 transition-all hover:border-border-strong">
+        <div className="text-xs uppercase tracking-wide text-text-muted font-medium">You are owed</div>
+        <div className="text-xl font-bold font-display text-owed mt-1">{formatMoney(youAreOwed, profile.defaultCurrency)}</div>
       </div>
     </div>
   );

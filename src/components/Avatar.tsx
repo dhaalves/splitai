@@ -7,7 +7,7 @@ interface AvatarProps {
 const sizes = {
   sm: 'w-8 h-8 text-xs',
   md: 'w-10 h-10 text-sm',
-  lg: 'w-14 h-14 text-base',
+  lg: 'w-14 h-14 text-lg',
 };
 
 function initials(name: string): string {
@@ -20,7 +20,7 @@ function initials(name: string): string {
 export function Avatar({ name, color, size = 'md' }: AvatarProps) {
   return (
     <div
-      className={`${sizes[size]} rounded-full flex items-center justify-center font-semibold text-white shrink-0`}
+      className={`${sizes[size]} rounded-full flex items-center justify-center font-bold font-display text-white shrink-0`}
       style={{ backgroundColor: color }}
       aria-hidden
     >

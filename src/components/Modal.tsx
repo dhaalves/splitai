@@ -45,7 +45,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4 animate-fade-in"
       onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
@@ -53,12 +53,12 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="w-full sm:max-w-lg bg-bg-card border border-border-color rounded-t-2xl sm:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto"
+        className="w-full sm:max-w-lg bg-bg-dark border border-border-strong rounded-t-2xl sm:rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto animate-slide-up"
       >
         {title && (
           <div className="px-5 py-4 border-b border-border-color flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
-            <button onClick={onClose} aria-label="Close" className="text-text-secondary hover:text-text-primary">
+            <h2 className="text-lg font-bold font-display text-text-primary">{title}</h2>
+            <button onClick={onClose} aria-label="Close" className="text-text-secondary hover:text-text-primary transition-colors w-8 h-8 flex items-center justify-center rounded-lg hover:bg-bg-card">
               ✕
             </button>
           </div>

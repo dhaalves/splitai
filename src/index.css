@@ -10,9 +10,19 @@ body {
   @apply bg-bg-darker text-text-primary antialiased;
 }
 
+::selection {
+  background: var(--tw-color-accent-glow, rgba(16, 185, 129, 0.2));
+  color: #f8fafc;
+}
+
 /* Custom Card styling like the reference */
 .card {
-  @apply bg-bg-card border border-border-color rounded-lg p-5 shadow-md backdrop-blur-md transition-transform duration-300;
+  @apply bg-bg-card border border-border-color rounded-lg p-5 shadow-md backdrop-blur-md transition-all duration-300;
+}
+
+.card:hover {
+  @apply border-border-strong;
+  transform: translateY(-2px);
 }
 
 .card h2 {
@@ -21,6 +31,11 @@ body {
 
 .section-desc {
   @apply text-sm text-text-secondary mb-4;
+}
+
+/* Focus ring utility — accent glow */
+.focus-ring {
+  @apply focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20;
 }
 
 /* Modal styles */
@@ -43,4 +58,45 @@ body {
 /* Stat Box Detailed from reference */
 .stat-box-detailed {
   @apply bg-bg-card border border-border-color rounded-md p-4 flex items-center gap-4 relative overflow-hidden;
+}
+
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Hide scrollbar on mobile */
+.mobile-no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.mobile-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Text gradient utility */
+.text-gradient {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

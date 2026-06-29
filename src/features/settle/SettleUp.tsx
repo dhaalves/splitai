@@ -37,17 +37,23 @@ export function SettleUp() {
             description="No outstanding balances to settle."
           />
         ) : (
-          <ul className="space-y-2">
+          <div className="space-y-3">
             {suggestions.map((s, i) => (
-              <li key={i} className="flex items-center justify-between p-3 rounded-xl bg-bg-card border border-border-color">
-                <div>
-                  <div className="font-medium">{s.label}</div>
-                  <Money cents={s.amount} currency={profile.defaultCurrency} className="text-text-secondary text-sm" />
+              <div
+                key={i}
+                className="flex items-center gap-3 p-4 rounded-xl bg-bg-card border border-border-color transition-all hover:border-border-strong"
+              >
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-lg shrink-0">
+                  💸
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold truncate">{s.label}</div>
+                  <Money cents={s.amount} currency={profile.defaultCurrency} className="text-text-secondary text-sm font-display" />
                 </div>
                 <Button size="sm" onClick={() => settle(s)}>Settle</Button>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

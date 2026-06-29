@@ -21,15 +21,17 @@ export function MonthlyChart() {
   if (data.length === 0) return <p className="text-text-secondary text-sm">No spending data yet.</p>;
   return (
     <div className="rounded-xl bg-bg-card border border-border-color p-4 h-64">
-      <ResponsiveContainer width="100%" height="100%">
+      <div className="text-sm font-semibold font-display text-text-primary mb-2">Monthly spending</div>
+      <ResponsiveContainer width="100%" height="80%">
         <LineChart data={data}>
-          <XAxis dataKey="month" stroke="#94a3b8" fontSize={12} />
-          <YAxis stroke="#94a3b8" fontSize={12} />
+          <XAxis dataKey="month" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
+          <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
           <Tooltip
-            contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 8 }}
-            labelStyle={{ color: '#e2e8f0' }}
+            contentStyle={{ backgroundColor: '#0f1626', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 12, fontSize: 13 }}
+            labelStyle={{ color: '#94a3b8' }}
+            itemStyle={{ color: '#10b981' }}
           />
-          <Line type="monotone" dataKey="total" stroke="#6366f1" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="total" stroke="#10b981" strokeWidth={2.5} dot={{ fill: '#10b981', r: 3 }} activeDot={{ r: 5, fill: '#10b981' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
