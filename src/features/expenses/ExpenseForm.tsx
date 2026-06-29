@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Modal } from '../../components/Modal';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
@@ -48,13 +48,16 @@ export function ExpenseForm({
   const [splits, setSplits] = useState<SplitEntry[]>([]);
   const [isSettlement, setIsSettlement] = useState(false);
 
-  const participantIds: string[] = group
-    ? group.memberIds
-    : initialFriendId && profile
-    ? [profile.id, initialFriendId]
-    : profile
-    ? [profile.id, ...(contacts ?? []).slice(0, 1).map((c) => c.id)]
-    : [];
+  // Stable participant id list. Memoised because every value of this list is
+  // referenced in the init `useEffect` deps; without memoisation, branches
+  // that build a new array (no `group` yet) would change identity on every
+  // render and the effect would loop.
+  const participantIds = useMemo<string[]>(() => {
+    if (group) return group.memberIds;
+    if (initialFriendId && profile) return [profile.id, initialFriendId];
+    if (profile) return [profile.id, ...(contacts ?? []).slice(0, 1).map((c) => c.id)];
+    return [];
+  }, [group, initialFriendId, profile, contacts]);
 
   const participants = participantIds.map((id) => {
     if (profile && id === profile.id) {
@@ -64,6 +67,12 @@ export function ExpenseForm({
     return { id, name: c ? `${c.firstName} ${c.lastName}` : 'Unknown', color: c?.avatarColor ?? '#64748b' };
   });
 
+  // Re-init the form whenever the user opens it, switches between create/edit,
+  // or — in create mode — once the asynchronously-loaded group / contacts data
+  // has resolved. Without the extra deps below, opening the form from a group
+  // (e.g. `/expenses/new?group=<id>`) would initialise `splits` with the
+  // fallback `[profile, firstContact]` before the group query resolves, and
+  // the splits would never be rebuilt to include the full member list.
   useEffect(() => {
     if (!open || !profile) return;
     if (existing) {
@@ -75,7 +84,10 @@ export function ExpenseForm({
       setMethod(existing.splitMethod);
       setSplits(existing.splits);
       setIsSettlement(existing.isSettlement);
-    } else {
+    } else if (participantIds.length > 0) {
+      // Only seed splits once we actually know who the participants are.
+      // `participantIds` may be `[]` on the very first render while group
+      // / contacts are still loading — re-running on the next render is fine.
       setAmount(0);
       setDescription('');
       setCategory('general');
@@ -85,8 +97,7 @@ export function ExpenseForm({
       setSplits(participantIds.map((id) => ({ userId: id, share: 0 })));
       setIsSettlement(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, existing, profile?.id]);
+  }, [open, existing, profile?.id, initialGroupId, initialFriendId, participantIds]);
 
   function updateShare(userId: string, share: number) {
     setSplits((prev) => prev.map((s) => (s.userId === userId ? { ...s, share } : s)));
@@ -119,7 +130,11 @@ export function ExpenseForm({
       description: description.trim(),
       category,
       date,
-      groupId: initialGroupId,
+      // Preserve the original groupId when editing; otherwise scope to the
+      // group passed in the URL (`initialGroupId`). Without this, editing a
+      // group expense (no `?group=` in the edit URL) would silently drop the
+      // group association.
+      groupId: editingId ? (existing?.groupId ?? null) : initialGroupId,
       paidBy,
       splitMethod: isSettlement ? 'exact' : method,
       splits: isSettlement
