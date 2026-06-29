@@ -40,18 +40,26 @@ export function CategoryManager() {
       <Header title="Categories" />
       <div className="p-4 space-y-3">
         <Button size="sm" onClick={() => setShowForm(true)}>+ Add category</Button>
-        <ul className="space-y-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {(categories ?? []).map((c) => (
-            <li key={c.id} className="flex items-center gap-3 p-3 rounded-xl bg-bg-card border border-border-color">
-              <span className="text-xl">{c.icon}</span>
-              <span className="flex-1">{c.name}</span>
-              <span className="w-4 h-4 rounded-full" style={{ backgroundColor: c.color }} />
+            <div
+              key={c.id}
+              className="flex items-center gap-3 p-3.5 rounded-2xl bg-bg-card border border-border-color hover:border-border-strong transition-all"
+              style={{ borderLeft: `3px solid ${c.color}` }}
+            >
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0"
+                style={{ backgroundColor: `${c.color}20` }}
+              >
+                {c.icon}
+              </div>
+              <span className="flex-1 font-semibold truncate">{c.name}</span>
               {!c.system && (
-                <Button size="sm" variant="ghost" onClick={() => setConfirmId(c.id)}>Delete</Button>
+                <Button size="sm" variant="ghost" onClick={() => setConfirmId(c.id)}>Del</Button>
               )}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
       <Modal
         open={showForm}
@@ -60,12 +68,18 @@ export function CategoryManager() {
         footer={<><Button variant="ghost" onClick={() => setShowForm(false)}>Cancel</Button><Button onClick={submit} disabled={!name.trim()}>Add</Button></>}
       >
         <div className="space-y-3">
-          <label className="block"><span className="text-sm text-text-secondary">Name</span>
-            <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1" /></label>
-          <label className="block"><span className="text-sm text-text-secondary">Icon (emoji)</span>
-            <Input value={icon} onChange={(e) => setIcon(e.target.value)} className="mt-1" /></label>
-          <label className="block"><span className="text-sm text-text-secondary">Color (hex)</span>
-            <Input value={color} onChange={(e) => setColor(e.target.value)} className="mt-1" /></label>
+          <label className="block">
+            <span className="text-sm font-medium text-text-secondary">Name</span>
+            <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5" placeholder="Category name" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium text-text-secondary">Icon (emoji)</span>
+            <Input value={icon} onChange={(e) => setIcon(e.target.value)} className="mt-1.5" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium text-text-secondary">Color (hex)</span>
+            <Input value={color} onChange={(e) => setColor(e.target.value)} className="mt-1.5" />
+          </label>
         </div>
       </Modal>
       <ConfirmDialog

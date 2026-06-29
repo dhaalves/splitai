@@ -41,9 +41,9 @@ export function SettleUp() {
             {suggestions.map((s, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 p-4 rounded-xl bg-bg-card border border-border-color transition-all hover:border-border-strong"
+                className="relative overflow-hidden flex items-center gap-3 p-4 rounded-2xl bg-bg-card border border-border-color transition-all hover:border-border-strong"
               >
-                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-lg shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent/15 to-accent-secondary/10 flex items-center justify-center text-lg shrink-0">
                   💸
                 </div>
                 <div className="flex-1 min-w-0">

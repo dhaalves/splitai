@@ -6,6 +6,30 @@ import { getDb, CURRENT_SCHEMA_VERSION } from '../../db/db';
 import { validateAndRemap, type BackupFile } from './importValidate';
 import { toCsv } from '../../lib/csv';
 
+const actions = [
+  {
+    icon: '📦',
+    title: 'Export JSON',
+    desc: 'Full backup — all data including profile, contacts, groups, expenses.',
+    color: 'rgba(16,185,129,0.12)',
+    variant: 'primary' as const,
+  },
+  {
+    icon: '📋',
+    title: 'Export CSV',
+    desc: 'Expenses only — for spreadsheet analysis.',
+    color: 'rgba(6,182,212,0.12)',
+    variant: 'secondary' as const,
+  },
+  {
+    icon: '📥',
+    title: 'Import JSON',
+    desc: 'Restore from a previous backup file.',
+    color: 'rgba(234,179,8,0.12)',
+    variant: 'secondary' as const,
+  },
+];
+
 export function Backup() {
   const fileRef = useRef<HTMLInputElement>(null);
   const push = useToasts((s) => s.push);
@@ -77,10 +101,40 @@ export function Backup() {
     <div>
       <Header title="Backup & Data" />
       <div className="p-4 space-y-3">
-        <Button onClick={exportJson}>Export JSON (full backup)</Button>
-        <Button variant="secondary" onClick={exportCsv}>Export CSV (expenses only)</Button>
-        <div>
-          <Button variant="secondary" onClick={() => fileRef.current?.click()}>Import JSON</Button>
+        {/* Export JSON */}
+        <div className="flex items-start gap-3 p-4 rounded-2xl bg-bg-card border border-border-color">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ backgroundColor: actions[0].color }}>
+            {actions[0].icon}
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold">{actions[0].title}</div>
+            <div className="text-xs text-text-secondary mt-0.5">{actions[0].desc}</div>
+          </div>
+          <Button size="sm" onClick={exportJson}>Export</Button>
+        </div>
+
+        {/* Export CSV */}
+        <div className="flex items-start gap-3 p-4 rounded-2xl bg-bg-card border border-border-color">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ backgroundColor: actions[1].color }}>
+            {actions[1].icon}
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold">{actions[1].title}</div>
+            <div className="text-xs text-text-secondary mt-0.5">{actions[1].desc}</div>
+          </div>
+          <Button size="sm" variant="secondary" onClick={exportCsv}>Export</Button>
+        </div>
+
+        {/* Import JSON */}
+        <div className="flex items-start gap-3 p-4 rounded-2xl bg-bg-card border border-border-color">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ backgroundColor: actions[2].color }}>
+            {actions[2].icon}
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold">{actions[2].title}</div>
+            <div className="text-xs text-text-secondary mt-0.5">{actions[2].desc}</div>
+          </div>
+          <Button size="sm" variant="secondary" onClick={() => fileRef.current?.click()}>Import</Button>
           <input
             ref={fileRef}
             type="file"
@@ -93,7 +147,8 @@ export function Backup() {
             }}
           />
         </div>
-        <p className="text-xs text-text-muted">
+
+        <p className="text-xs text-text-muted mt-2 px-1">
           Importing adds data alongside existing records (ids are remapped to avoid collisions).
           To fully replace, clear data from your browser first.
         </p>

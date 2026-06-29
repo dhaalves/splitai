@@ -10,6 +10,18 @@ import { useProfile } from '../auth/useProfile';
 import { RecurringForm } from './RecurringForm';
 import { formatDate } from '../../lib/dates';
 
+const freqIcons: Record<string, string> = {
+  weekly: '📅',
+  monthly: '🗓️',
+  yearly: '🎉',
+};
+
+const freqColors: Record<string, string> = {
+  weekly: 'rgba(6,182,212,0.12)',
+  monthly: 'rgba(139,92,246,0.12)',
+  yearly: 'rgba(234,179,8,0.12)',
+};
+
 export function RecurringList() {
   const all = useRecurringAll();
   const profile = useProfile();
@@ -29,24 +41,39 @@ export function RecurringList() {
             action={<Button onClick={() => setShowForm(true)}>New recurring</Button>}
           />
         ) : (
-          <ul className="space-y-2">
-            {all.map((r) => (
-              <li key={r.id}>
+          <div className="space-y-2.5">
+            {all.map((r) => {
+              const icon = freqIcons[r.frequency] ?? '🔁';
+              const color = freqColors[r.frequency] ?? 'rgba(148,163,184,0.12)';
+              return (
                 <Link
+                  key={r.id}
                   to={`/recurring/${r.id}`}
-                  className="flex items-center justify-between p-3 rounded-xl bg-bg-card border border-border-color hover:bg-text-secondary/10"
+                  className="flex items-center gap-3 p-3.5 rounded-2xl bg-bg-card border border-border-color hover:border-border-strong hover:bg-bg-elevated/50 transition-all"
                 >
-                  <div>
-                    <div className="font-medium">{r.description}</div>
-                    <div className="text-xs text-text-secondary capitalize">
-                      {r.frequency} · next: {formatDate(r.nextDate)} · {r.active ? 'active' : 'paused'}
-                    </div>
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-lg shrink-0"
+                    style={{ backgroundColor: color }}
+                  >
+                    {icon}
                   </div>
-                  <Money cents={r.amount} currency={profile.defaultCurrency} className="font-semibold" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold truncate">{r.description}</div>
+                    <div className="text-xs text-text-secondary mt-0.5 capitalize">
+                      {r.frequency} · next: {formatDate(r.nextDate)}
+                    </div>
+                    {r.active && (
+                      <div className="inline-flex items-center gap-1 mt-1 text-xs text-accent">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                        active
+                      </div>
+                    )}
+                  </div>
+                  <Money cents={r.amount} currency={profile.defaultCurrency} className="font-bold font-display" />
                 </Link>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         )}
       </div>
       <FAB onClick={() => setShowForm(true)} label="+" />

@@ -13,6 +13,17 @@ import { computeOwed } from '../../domain/splits';
 import { formatMoney } from '../../lib/currency';
 import { formatDate } from '../../lib/dates';
 
+const catColors: Record<string, string> = {
+  food: 'rgba(16,185,129,0.12)',
+  transport: 'rgba(6,182,212,0.12)',
+  rent: 'rgba(139,92,246,0.12)',
+  entertainment: 'rgba(234,179,8,0.12)',
+  health: 'rgba(239,68,68,0.12)',
+  groceries: 'rgba(52,211,153,0.12)',
+  travel: 'rgba(251,113,133,0.12)',
+  general: 'rgba(148,163,184,0.12)',
+};
+
 export function ExpenseDetail() {
   const { id } = useParams<{ id: string }>();
   const expense = useExpense(id);
@@ -28,6 +39,7 @@ export function ExpenseDetail() {
 
   if (!expense || !profile) return null;
   const owed = computeOwed({ amount: expense.amount, method: expense.splitMethod, splits: expense.splits });
+  const catColor = catColors[expense.category] ?? 'rgba(148,163,184,0.12)';
 
   function nameOf(userId: string): string {
     if (profile && userId === profile.id) return `${profile.firstName} ${profile.lastName}`;
@@ -45,40 +57,49 @@ export function ExpenseDetail() {
     <div>
       <Header
         title="Expense"
-        action={<Link to="/"><Button size="sm" variant="ghost">Back</Button></Link>}
+        action={<Link to="/"><Button size="sm" variant="ghost">← Back</Button></Link>}
       />
       <div className="p-4 space-y-4">
-        <div className="rounded-xl bg-bg-card border border-border-color p-4">
-          <div className="flex items-center justify-between">
+        {/* Hero card */}
+        <div className="relative overflow-hidden rounded-2xl bg-bg-card border border-border-color p-5">
+          <div className="flex items-start justify-between">
             <div>
-              <div className="text-2xl font-bold">
+              <div className="text-3xl font-bold font-display">
                 <Money cents={expense.amount} currency={expense.currency} />
               </div>
-              <div className="text-text-secondary">{expense.description || '(no description)'}</div>
+              <div className="text-text-secondary mt-1">{expense.description || '(no description)'}</div>
             </div>
-            <span className="text-3xl" aria-hidden>{category?.icon ?? '📦'}</span>
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+              style={{ backgroundColor: catColor }}
+            >
+              {category?.icon ?? '📦'}
+            </div>
           </div>
-          <dl className="mt-4 text-sm space-y-1">
-            <div className="flex justify-between"><dt className="text-text-secondary">Date</dt><dd>{formatDate(expense.date)}</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Category</dt><dd>{category?.name ?? '—'}</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Paid by</dt><dd>{nameOf(expense.paidBy)}</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Method</dt><dd className="capitalize">{expense.splitMethod}</dd></div>
-            {expense.isSettlement && <div className="flex justify-between"><dt className="text-text-secondary">Type</dt><dd>Settlement</dd></div>}
+          <dl className="mt-4 text-sm space-y-2 border-t border-border-color pt-4">
+            <div className="flex justify-between"><dt className="text-text-secondary">Date</dt><dd className="font-medium">{formatDate(expense.date)}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Category</dt><dd className="font-medium">{category?.name ?? '—'}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Paid by</dt><dd className="font-medium">{nameOf(expense.paidBy)}</dd></div>
+            <div className="flex justify-between"><dt className="text-text-secondary">Method</dt><dd className="font-medium capitalize">{expense.splitMethod}</dd></div>
+            {expense.isSettlement && <div className="flex justify-between"><dt className="text-text-secondary">Type</dt><dd className="font-medium text-accent-secondary">Settlement</dd></div>}
           </dl>
         </div>
+
+        {/* Splits */}
         {!expense.isSettlement && (
-          <div className="rounded-xl bg-bg-card border border-border-color p-4">
-            <h3 className="text-sm uppercase text-text-muted mb-2">Splits</h3>
-            <ul className="space-y-1 text-sm">
+          <div className="rounded-2xl bg-bg-card border border-border-color p-5">
+            <h3 className="text-sm font-bold font-display text-text-primary mb-3">Splits</h3>
+            <ul className="space-y-2.5 text-sm">
               {expense.splits.map((s) => (
-                <li key={s.userId} className="flex justify-between">
-                  <span>{nameOf(s.userId)}</span>
-                  <span>{formatMoney(owed[s.userId] ?? 0, expense.currency)}</span>
+                <li key={s.userId} className="flex justify-between items-center">
+                  <span className="text-text-secondary">{nameOf(s.userId)}</span>
+                  <span className="font-semibold font-display">{formatMoney(owed[s.userId] ?? 0, expense.currency)}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
+
         <div className="flex gap-2">
           <Link to={`/expenses/${expense.id}/edit`}><Button size="sm">Edit</Button></Link>
           {expense.deletedAt === null ? (

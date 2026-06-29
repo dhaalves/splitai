@@ -32,28 +32,27 @@ export function FriendsList() {
             action={<Button onClick={() => setShowForm(true)}>Add a friend</Button>}
           />
         ) : (
-          <ul className="space-y-2">
+          <div className="space-y-2.5">
             {friends.map((f) => {
               const bal = pairBalance(expenses ?? [], profile.id, f.id);
               const youOwe = bal.from === profile.id && bal.amount > 0;
               const youAreOwed = bal.to === profile.id && bal.amount > 0;
               const signed = youOwe ? -bal.amount : youAreOwed ? bal.amount : 0;
               return (
-                <li key={f.id}>
-                  <Link
-                    to={`/friends/${f.id}`}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-bg-card hover:bg-text-secondary/10 border border-border-color"
-                  >
-                    <Avatar name={`${f.firstName} ${f.lastName}`} color={f.avatarColor} />
-                    <div className="flex-1">
-                      <div className="font-medium">{f.firstName} {f.lastName}</div>
-                      <BalanceBadge cents={signed} currency={profile.defaultCurrency} />
-                    </div>
-                  </Link>
-                </li>
+                <Link
+                  key={f.id}
+                  to={`/friends/${f.id}`}
+                  className="flex items-center gap-3 p-3.5 rounded-2xl bg-bg-card border border-border-color hover:border-border-strong hover:bg-bg-elevated/50 transition-all"
+                >
+                  <Avatar name={`${f.firstName} ${f.lastName}`} color={f.avatarColor} size="md" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold truncate">{f.firstName} {f.lastName}</div>
+                    <BalanceBadge cents={signed} currency={profile.defaultCurrency} />
+                  </div>
+                </Link>
               );
             })}
-          </ul>
+          </div>
         )}
       </div>
       <FriendForm open={showForm} onClose={() => setShowForm(false)} onSaved={() => setShowForm(false)} />

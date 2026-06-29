@@ -168,56 +168,57 @@ export function ExpenseForm({
     >
       <div className="space-y-4">
         <label className="block">
-          <span className="text-sm text-text-secondary">Amount</span>
+          <span className="text-sm font-medium text-text-secondary">Amount</span>
           <AmountInput
             aria-label="Amount"
             valueCents={amount}
             onChange={setAmount}
             currency={profile.defaultCurrency}
-            className="mt-1"
+            className="mt-1.5"
           />
         </label>
         <label className="block">
-          <span className="text-sm text-text-secondary">Description</span>
+          <span className="text-sm font-medium text-text-secondary">Description</span>
           <Input
             aria-label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1"
+            className="mt-1.5"
           />
         </label>
         <div>
-          <span className="text-sm text-text-secondary">Category</span>
-          <div className="mt-1">
+          <span className="text-sm font-medium text-text-secondary">Category</span>
+          <div className="mt-1.5">
             <CategoryPicker selectedId={category} onSelect={setCategory} />
           </div>
         </div>
         <label className="block">
-          <span className="text-sm text-text-secondary">Date</span>
+          <span className="text-sm font-medium text-text-secondary">Date</span>
           <Input
             type="date"
             aria-label="Date"
             value={new Date(date).toISOString().slice(0, 10)}
             onChange={(e) => setDate(new Date(e.target.value).getTime())}
-            className="mt-1"
+            className="mt-1.5"
           />
         </label>
         <label className="block">
-          <span className="text-sm text-text-secondary">Paid by</span>
+          <span className="text-sm font-medium text-text-secondary">Paid by</span>
           <select
             aria-label="Paid by"
             value={paidBy}
             onChange={(e) => setPaidBy(e.target.value)}
-            className="mt-1 w-full rounded-xl bg-bg-card border border-border-color px-3 py-2 text-text-primary"
+            className="mt-1.5 w-full rounded-xl bg-bg-dark border border-border-strong px-3.5 py-3 text-text-primary transition-all focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
           >
             {participants.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </label>
-        <label className="flex items-center gap-2 text-sm text-text-secondary">
+        <label className="flex items-center gap-2.5 text-sm font-medium text-text-secondary cursor-pointer">
           <input
             type="checkbox"
             checked={isSettlement}
             onChange={(e) => setIsSettlement(e.target.checked)}
+            className="w-4 h-4 rounded accent-accent"
           />
           This is a settlement payment
         </label>

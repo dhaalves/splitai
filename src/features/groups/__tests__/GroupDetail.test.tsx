@@ -44,7 +44,7 @@ describe('GroupDetail simplify toggle', () => {
     await user.click(balancesTab);
     const toggle = await screen.findByRole('button', { name: /simplify/i });
     await user.click(toggle);
-    expect(screen.getByText(/ada.*owes you/i)).toBeInTheDocument();
-    expect(screen.getByText(/bob.*owes you/i)).toBeInTheDocument();
+    expect(screen.getByText(/ada.*l.*→.*you/i)).toBeInTheDocument();
+    expect(screen.getByText(/bob.*b.*→.*you/i)).toBeInTheDocument();
   });
 });

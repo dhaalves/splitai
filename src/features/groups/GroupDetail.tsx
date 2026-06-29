@@ -19,6 +19,13 @@ import type { Contact } from '../../db/schema';
 
 type Tab = 'expenses' | 'balances' | 'members';
 
+const groupTypeIcons: Record<string, string> = {
+  home: '🏠',
+  trip: '✈️',
+  couple: '💕',
+  other: '📦',
+};
+
 export function GroupDetail() {
   const { id } = useParams<{ id: string }>();
   const group = useGroup(id);
@@ -48,6 +55,7 @@ export function GroupDetail() {
   }
 
   const transfers = simplified ? simplifyDebts(net) : [];
+  const icon = groupTypeIcons[group.type] ?? '📦';
 
   async function doDelete() {
     await softDeleteGroup(group!.id);
@@ -59,74 +67,100 @@ export function GroupDetail() {
     <div>
       <Header
         title={group.name}
-        action={<Link to="/groups"><Button size="sm" variant="ghost">Back</Button></Link>}
+        action={<Link to="/groups"><Button size="sm" variant="ghost">← Back</Button></Link>}
       />
       <div className="p-4 space-y-4">
-        <div className="rounded-xl bg-bg-card border border-border-color p-4">
-          <div className="text-xs uppercase text-text-muted capitalize">{group.type}</div>
-          <div className={`text-xl font-bold ${yourNet > 0 ? 'text-owed' : yourNet < 0 ? 'text-owe' : 'text-text-secondary'}`}>
-            {yourNet === 0 ? 'settled up' : yourNet > 0
-              ? `you are owed ${formatMoney(yourNet, profile.defaultCurrency)}`
-              : `you owe ${formatMoney(-yourNet, profile.defaultCurrency)}`}
+        {/* Hero card */}
+        <div
+          className="relative overflow-hidden rounded-2xl border p-5"
+          style={{
+            background: yourNet >= 0
+              ? 'linear-gradient(135deg, rgba(16,185,129,0.10), rgba(6,182,212,0.05))'
+              : 'linear-gradient(135deg, rgba(251,113,133,0.10), rgba(239,68,68,0.05))',
+            borderColor: yourNet >= 0 ? 'rgba(16,185,129,0.25)' : 'rgba(251,113,133,0.25)',
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-text-muted font-semibold capitalize">
+                <span className="text-base">{icon}</span> {group.type}
+              </div>
+              <div className={`text-2xl font-bold font-display mt-1 ${yourNet > 0 ? 'text-owed' : yourNet < 0 ? 'text-owe' : 'text-text-secondary'}`}>
+                {yourNet === 0 ? 'settled up' : yourNet > 0
+                  ? `you are owed ${formatMoney(yourNet, profile.defaultCurrency)}`
+                  : `you owe ${formatMoney(-yourNet, profile.defaultCurrency)}`}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flex gap-2">
+
+        {/* Tabs */}
+        <div className="flex gap-2 p-1 rounded-xl bg-bg-dark border border-border-color">
           {(['expenses', 'balances', 'members'] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-3 py-1 rounded-lg text-sm capitalize ${tab === t ? 'bg-accent-500 text-white' : 'bg-bg-card text-text-secondary'}`}
+              className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium capitalize transition-all ${
+                tab === t ? 'bg-accent-500 text-white shadow-glow-sm' : 'text-text-secondary hover:text-text-primary'
+              }`}
             >
               {t}
             </button>
           ))}
         </div>
+
         {tab === 'expenses' && <ExpenseList groupId={group.id} />}
         {tab === 'balances' && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm uppercase text-text-muted">Balances</h3>
+              <h3 className="text-sm font-bold font-display text-text-primary">Balances</h3>
               <button
                 onClick={() => setSimplified((s) => !s)}
-                className="text-xs px-2 py-1 rounded-lg bg-bg-card text-text-secondary"
+                className="text-xs px-3 py-1.5 rounded-lg bg-bg-card border border-border-color text-text-secondary hover:border-border-strong transition-all font-medium"
               >
                 {simplified ? 'Show raw' : 'Simplify'}
               </button>
             </div>
             {!simplified ? (
-              <ul className="space-y-1 text-sm">
+              <div className="rounded-2xl bg-bg-card border border-border-color p-4 space-y-2.5 text-sm">
                 {group.memberIds.map((uid) => {
                   const n = net[uid] ?? 0;
                   return (
-                    <li key={uid} className="flex justify-between">
-                      <span>{nameOf(uid)}</span>
-                      <span className={n > 0 ? 'text-owed' : n < 0 ? 'text-owe' : 'text-text-muted'}>
-                        {n === 0 ? 'settled' : formatMoney(n, profile.defaultCurrency)}
-                      </span>
-                    </li>
+                    <div key={uid} className="flex justify-between items-center">
+                      <span className="text-text-secondary">{nameOf(uid)}</span>
+                      <div className="flex items-center gap-2">
+                        <Avatar name={nameOf(uid)} color={colorOf(uid)} size="sm" />
+                        <span className={`font-semibold font-display ${n > 0 ? 'text-owed' : n < 0 ? 'text-owe' : 'text-text-muted'}`}>
+                          {n === 0 ? 'settled' : formatMoney(n, profile.defaultCurrency)}
+                        </span>
+                      </div>
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             ) : transfers.length === 0 ? (
-              <p className="text-text-secondary text-sm">All settled up.</p>
+              <div className="rounded-2xl bg-bg-card border border-border-color p-6 text-center">
+                <div className="text-3xl mb-2">✅</div>
+                <p className="text-text-secondary text-sm">All settled up.</p>
+              </div>
             ) : (
-              <ul className="space-y-1 text-sm">
+              <div className="rounded-2xl bg-bg-card border border-border-color p-4 space-y-2 text-sm">
                 {transfers.map((t, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>{nameOf(t.from)} owes {nameOf(t.to)}</span>
-                    <span>{formatMoney(t.amount, profile.defaultCurrency)}</span>
-                  </li>
+                  <div key={i} className="flex justify-between items-center">
+                    <span className="text-text-secondary">{nameOf(t.from)} → {nameOf(t.to)}</span>
+                    <span className="font-semibold font-display">{formatMoney(t.amount, profile.defaultCurrency)}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         )}
         {tab === 'members' && (
           <div className="space-y-2">
             {group.memberIds.map((uid) => (
-              <div key={uid} className="flex items-center gap-3 p-2 rounded-lg bg-bg-card border border-border-color">
+              <div key={uid} className="flex items-center gap-3 p-3 rounded-xl bg-bg-card border border-border-color">
                 <Avatar name={nameOf(uid)} color={colorOf(uid)} size="sm" />
-                <div className="flex-1">{nameOf(uid)}</div>
+                <div className="flex-1 font-medium">{nameOf(uid)}</div>
                 {uid !== profile.id && (
                   <Button size="sm" variant="ghost" onClick={async () => {
                     await removeMember(group.id, uid);
